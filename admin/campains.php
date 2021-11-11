@@ -24,6 +24,6 @@
 	<?php include('footer.php');?>
 	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
-	<!-- <script type="text/javascript" src="script/users.js"></script> -->
+	<script type="text/javascript" src="script/campains.js"></script>
 </body>
 </html>

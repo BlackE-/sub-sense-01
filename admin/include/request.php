@@ -17,6 +17,31 @@
             $response['return'] = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , $type);
             $response['message'] = $set->getErrorMessage();
         break;
+        case "getCampains":
+            $response['return'] = $set->getCampains();
+            $response['message'] = $set->getErrorMessage();
+        break;
+        case "getCampain":
+            $idcampain = $decoded['idcampain'];
+            $response['return'] = $set->getCampain($idcampain); //return campain data and links to surveys
+            
+            // $campain = $campain = $set->getCampain($idcampain); //return campain data and links to surveys
+            // if(!$campain){
+
+            // }else{
+                // $surveysFromCampain = $set->getSurveysFromCampain($idcampain);
+            // }
+            // $response['return'] = array('campain'=>$campain,'surveys'=>$surveysFromCampain);
+            
+            $response['message'] = $set->getErrorMessage();
+        break;
+        case "getSurveys":
+            $response['return'] = $set->getSurveys();
+            $response['message'] = $set->getErrorMessage();
+        break;
+
+
+
         case "insertUser":
             $folio =        $decoded['folio'];
             $firstname =    $decoded['firstname'];
@@ -109,7 +134,6 @@
             $response['return'] = $sample;
             $response['message'] = $set->getErrorMessage();
         break;
-        
         case "insertResponse":
             $value  =  $decoded['value'];
             $label =  $decoded['label'];

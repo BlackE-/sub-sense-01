@@ -294,6 +294,54 @@
 		    return $returnValue;
 		}
 
+		function getCampains(){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$qry = 'SELECT name,status,date_created,idcampain from campain';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin Campañas');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin Campañas');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			return $returnValue; 
+		}
+
+		function getCampain( $idcampain ){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$qry = 'SELECT * from campain WHERE idcampain = ' . $idcampain;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin Campañas');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin Campañas');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			return $returnValue; 
+		}
+
 		function getSurveys(){
 			$returnValue = true;
 			$this->checkDBLogin();
@@ -316,6 +364,89 @@
 			}
 			return $returnValue; 
 		}
+
+		function getSurveysFromCampain( $idcampain ){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from survey WHERE campain_idcampain = '.$idcampain;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin CUESTIONARIOS');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin CUESTIONARIOS');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			return $returnValue; 
+		}
+
+		function getSurveyFromCampain( $idcampain , $_order ){
+			//return only one
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from survey WHERE campain_idcampain = '.$idcampain . ' AND _order='.$_order;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin CUESTIONARIOS');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin CUESTIONARIOS');
+					$returnValue = false;
+				}else{
+					$returnValue = $this->db->fetchAssoc($result);
+				}
+			}
+			return $returnValue; 
+		}
+
+		function getTotalSurveysFromCampain( $idcampain ){
+			//return only one
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT COUNT(idsurvey) as NUMBER from survey WHERE campain_idcampain = '.$idcampain;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin CUESTIONARIOS');
+				$returnValue = false;
+			}else{
+				$row = $this->db->fetchAssoc($result);
+				$returnValue = $row['NUMBER'];
+			}
+			return $returnValue; 
+		}
+
+		function getSurveyQuestions($idsurvey){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from question WHERE survey_idsurvey = '.$idsurvey . ' ORDER BY _order';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin preguntas');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin preguntas');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			return $returnValue; 
+		}
+
 
 		function updateSurvey( $name, $description, $type, $idsurvey ){
 			$returnValue = true;
@@ -436,6 +567,61 @@
 			$this->db->closeAll();
 		    return $returnValue;
 		}
+
+
+		function getSurveySamples( $idsurvey ){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from sample WHERE survey_idsurvey = '.$idsurvey . ' ORDER BY _order';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin muestras');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin muestras');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			return $returnValue; 
+		}
+
+
+		function getQuestionResponses( $idquestion ){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT 	question_response._order, question_response.question_idquestion,question_response.response_idresponse,
+							response.idresponse,response.label,response.value
+					FROM 	question_response,response
+					WHERE  	question_response.response_idresponse = response.idresponse
+					AND 	question_response.question_idquestion = '.$idquestion . ' 
+					ORDER BY question_response._order';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin muestras');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin muestras');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			return $returnValue;
+		}
+
+
 
 
 		/*

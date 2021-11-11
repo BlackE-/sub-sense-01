@@ -72,6 +72,9 @@ main section{padding: 50px 0;overflow: hidden;}
 #mainConfig{grid-template-columns: 1fr;background-color: var(--white-color);height: auto;}
 #mainConfig .noShow{display: none;}
 #mainLogin{grid-template-columns: 1fr;background: var(--white-color);height: auto;}
+#mainPanelist{grid-template-columns: 1fr;justify-content: center;align-items: center;background: var(--white-color);height: auto;max-width: 500px;margin: 0 auto;}
+#mainAnswer{grid-template-columns: 1fr;background: var(--white-color);height: auto;}
+
 
 #usersSection .row{grid-template-columns: 250px 250px;justify-content: space-between;}
 #usersSection .tableContainer{width: calc(100% - 40px);background: var(--white-color);box-shadow: 0px 4px 4px rgba(0,0,0,.25);padding: 20px;min-height: 25vh;}
@@ -129,6 +132,17 @@ main section{padding: 50px 0;overflow: hidden;}
 }
 
 
+
+#campainContainer{}
+#campainContainer .buttonContainer{grid-template-columns: 250px 250px;justify-content: space-between;}
+#campainContainer .formContainer form{background: var(--white-color);}
+#campainContainer .formContainer form input[type="submit"]{display: none;}
+#campainContainer .formContainer form .title{font-size: 1rem;border-bottom: 1px solid var(--grey-color-lighter);padding-bottom: 10px;}
+#campainContainer .formContainer form .formRow{display: grid;grid-template-columns: 1fr 3fr;grid-gap: 10px;align-items: start;margin: 20px 0;}
+#campainContainer .formContainer form .formRow p{text-align: right;font-size: .8rem;}
+#campainContainer .formContainer form .formRow input,
+#campainContainer .formContainer form .formRow textarea{margin: 0;}
+#campainContainer .formContainer form .formRow .halfRow{display: grid;grid-template-columns: 1fr 1fr;grid-gap: 10px;}
 
 
 
@@ -197,6 +211,33 @@ main section{padding: 50px 0;overflow: hidden;}
 
 
 
+
+
+#campainAnswer .buttonContainer{grid-template-columns: 250px 250px;justify-content: space-between;}
+#campainAnswer .surveysContainer{background: var(--white-color);padding: 20px;}
+#campainAnswer .surveysContainer .title{font-size: 1rem;border-bottom: 1px solid var(--grey-color-lighter);padding-bottom: 10px;margin-bottom: 25px;}
+#campainAnswer .surveysContainer form {background: var(--white-color);font-size: .8rem;}
+#campainAnswer .surveysContainer form .formRow{display: grid;grid-template-columns: 40px 1fr;}
+#campainAnswer .surveysContainer form p{text-align: right;font-size: .8rem;}
+#campainAnswer .surveysContainer form input[type="checkbox"],
+#campainAnswer .surveysContainer form input[type="radio"]{display: block;}
+#campainAnswer .surveysContainer form input,
+#campainAnswer .surveysContainer form select,
+#campainAnswer .surveysContainer form textarea,
+#campainAnswer .surveysContainer form button{margin: 0;}
+#campainAnswer .surveysContainer form .formRow label{padding: 10px;}
+
+#campainAnswer .surveysContainer form .questionHTMLContainer{padding-bottom: 20px;}
+#campainAnswer .surveysContainer form .questionsContainer{padding: 20px;border: 1px solid var(--grey-color-darker);display: grid;grid-template-columns: 1fr 1fr 1fr;grid-gap: 25px;}
+#campainAnswer .surveysContainer form .questionContainer{padding: 10px;background-color: var(--grey-color-lighter);}
+
+@media(max-width: 768px){
+	#campainAnswer .surveysContainer{padding: 0;}
+	#campainAnswer .surveysContainer form{padding: 0;width: 100%;}
+	#campainAnswer .surveysContainer form .questionsContainer{grid-template-columns: 1fr;}
+	#campainAnswer .buttonContainer{grid-template-columns: 1fr 1fr;grid-gap: 20px;}
+	#campainAnswer .buttonContainer button span{display: none;}
+}
 
 
 

@@ -10,14 +10,7 @@
 		<li class="menu" id="menu1">
 			<a href="campains">
 				<i class="bi bi-clipboard"></i>
-				<span>Camapañas</span>
-			</a>
-		</li>
-
-		<li class="menu" id="menu1">
-			<a href="#">
-				<i class="bi bi-clipboard"></i>
-				<span>Cuestionarios</span>
+				<span>Campañas</span>
 			</a>
 		</li>
 
