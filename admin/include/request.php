@@ -39,6 +39,18 @@
             $response['return'] = $set->getSurveys();
             $response['message'] = $set->getErrorMessage();
         break;
+        case "getAnswer":
+            $idpanelist = $decoded['idpanelist'];
+            $idquestion = $decoded['idquestion'];
+            $_typeSurvey = $decoded['_typeSurvey'];
+            $_typeQuestion = $decoded['_typeQuestion'];
+            $idsample = '';
+            if(isset($decoded['idsample'])){$idsample = $decoded['idsample'];}
+            $answer = $set->getAnswer($idquestion,$idsample,$idpanelist);   //[idanswer,value]
+            if(!$answer){$response['return'] = false;}
+            else{$response['return'] = $answer;}
+            $response['message'] = $set->getErrorMessage();
+        break;
 
 
 
@@ -153,6 +165,32 @@
             }
             $response['message'] = $set->getErrorMessage();
         break; 
+
+        case "saveAnswer":
+            $value = $decoded['value'];
+            $idpanelist = $decoded['idpanelist'];
+            $idquestion = $decoded['idquestion'];
+            $idquestion_response = $decoded['idquestion_response'];
+            $idanswer = $decoded['idanswer'];
+            $idsample = $decoded['idsample'];
+            if($idanswer == "null"){
+                 //insertar answer
+                $answer = $set->saveAnswer($value,$idquestion_response,$idquestion,$idsample,$idpanelist); 
+            }
+            else{
+                //acutalizar answer
+                $idanswer = $decoded['idanswer']; //[idanswer,value,idquestion_response]
+                $_typeInput = $decoded['_typeInput'];
+                if($_typeInput == 'checkbox'){
+                    $array_idanswer = explode(",",$idanswer);
+                    $answer = $set->updateAnswerMultiple($array_idanswer,$value,$idquestion_response,$idquestion,$idsample,$idpanelist);
+                }else{
+                    $answer = $set->updateAnswer($idanswer,$value,$idquestion_response); 
+                }
+            }
+            $response['return'] = $answer;
+            $response['message'] = $set->getErrorMessage();
+        break;
     }
 
     

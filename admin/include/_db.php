@@ -351,7 +351,7 @@
                                     REFERENCES _user(iduser)
                                     ON DELETE NO ACTION ON UPDATE CASCADE
 
-                            )";
+                            ) SET FOREIGN_KEY_CHECKS = 0;";
                 $result = mysqli_query($this->connection,$create);
                 if(!$result){
                     $returnValue = false;

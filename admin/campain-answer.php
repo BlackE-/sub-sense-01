@@ -8,11 +8,8 @@
 
 ?>
 
-	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css"> -->
-	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/cferdinandi/tabby@12/dist/css/tabby-ui.css"> -->
-	
-	<link rel="stylesheet" href="css/bootstrap-icons.css">
-	<link rel="stylesheet" href="css/tabby-ui.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/cferdinandi/tabby@12/dist/css/tabby-ui.css">
 	<link rel="stylesheet" href="css/app.css">
 
 <main id="mainAnswer">
@@ -48,18 +45,24 @@
 							$questions = $set->getSurveyQuestions( $idsurvey );
 							foreach ($samples as $key => $value) {
 								echo '<div  id="sample'.$key.'Container">';
-								echo '<form id="sample'.$key.'formSurvey'.$_order.'">';
+								echo '<form class="formSamples" id="sample'.$key.'formSurvey'.$_order.'" name="'.$value['idsample'].'">';
 								echo 	'<div class="questionsContainer">';
 								foreach($questions as $qkey => $qvalue){
 									$idquestion = $qvalue['idquestion'];
-									echo '<div class="questionContainer">';
+									echo '<div class="questionContainer" id="'.$qvalue['idquestion'].'" >';
+										echo '<input type="hidden" name="idquestion" class="idquestion" value="'.$qvalue['idquestion'].'" data-type="'.$qvalue['type'].'"/>';
 										echo '<div class="questionHTMLContainer">'.$qvalue['html'].'</div>';
 										switch($qvalue['type']){
 											case 'scale':
 												$responses = $set->getQuestionResponses( $idquestion );
 												foreach($responses as $rkey => $rvalue){
 													echo '<div class="formRow">';
-													echo '<input name="sample'.$key.'question'.$qkey.'response" type="radio" id="sample'.$key.'question'.$qkey.'response'.$rkey.'" value='.$rvalue['value'].'>';
+													echo '	<input class="answer" name="q'.$qkey.'r" type="radio" value="'.$rvalue['value'].'" 
+																id="sample'.$key.'question'.$qkey.'response'.$rkey.'" 
+																data-sample="'.$value['idsample'].'"
+																data-question="'.$qvalue['idquestion'].'" 
+																data-question-response="'.$rvalue['idquestion_response'].'" 
+															>';
 													echo '<label for="sample'.$key.'question'.$qkey.'response'.$rkey.'">'.$rvalue['value'].' <span>'.$rvalue['label'].'</span></label>';
 													echo '</div>';
 												}
@@ -68,18 +71,39 @@
 												$responses = $set->getQuestionResponses( $idquestion );
 												foreach($responses as $rkey => $rvalue){
 													echo '<div class="formRow">';
-													echo '<input name="sample'.$key.'question'.$qkey.'response" type="checkbox" id="sample'.$key.'question'.$qkey.'response'.$rkey.'" value='.$rvalue['value'].'>';
+													echo '	<input class="answer" name="q'.$qkey.'r" type="checkbox" value="'.$rvalue['value'].'" 
+																id="sample'.$key.'question'.$qkey.'response'.$rkey.'"
+																data-sample="'.$value['idsample'].'"
+																data-question="'.$qvalue['idquestion'].'"
+																data-question-response="'.$rvalue['idquestion_response'].'" 
+															>';
 													echo '<label for="sample'.$key.'question'.$qkey.'response'.$rkey.'">'.$rvalue['value'].'<span>'.$rvalue['label'].'</span></label>';
 													echo '</div>';
 												}
 											break;
 											case 'radio':
+												$responses = $set->getQuestionResponses( $idquestion );
+												foreach($responses as $rkey => $rvalue){
+													echo '<div class="formRow">';
+													echo '<input class="answer" type="radio" value="'.$rvalue['value'].'" name="q'.$qkey.'r"
+																id="sample'.$key.'question'.$qkey.'response'.$rkey.'"
+																data-sample="'.$value['idsample'].'"
+																data-question="'.$qvalue['idquestion'].'"
+																data-question-response="'.$rvalue['idquestion_response'].'" 
+																>';
+													echo '<label for="sample'.$key.'question'.$qkey.'response'.$rkey.'">'.$rvalue['value'].'<span>'.$rvalue['label'].'</span></label>';
+													echo '</div>';
+												}
 											break;
 											case 'long':
-												echo '<textarea name="question'.$qkey.'long"></textarea>';
+												echo '<textarea class="answer" name="q'.$qkey.'" 
+																data-question="'.$qvalue['idquestion'].'" 
+																data-sample="'.$value['idsample'].'"></textarea>';
 											break;
 											case 'short':
-												echo '<input type="text" name="question'.$qkey.'short"/>';
+												echo '<input class="answer" type="text" name="q'.$qkey.'" 
+																data-question="'.$qvalue['idquestion'].'"
+																data-sample="'.$value['idsample'].'"/>';
 											break;
 										}
 									echo '</div>';
@@ -89,21 +113,26 @@
 								echo '</div>';
 							}
 						break;
-						
 						default:
 								$questions = $set->getSurveyQuestions( $idsurvey );
-								echo '<form id="formSurvey'.$_order.'">';
+								echo '<form class="formSurvey" id="formSurvey'.$_order.'">';
 								echo 	'<div class="questionsContainer">';
 								foreach($questions as $qkey => $qvalue){
 									$idquestion = $qvalue['idquestion'];
 									echo '<div class="questionContainer">';
 										echo '<div class="questionHTMLContainer">'.$qvalue['html'].'</div>';
+										echo '<input type="hidden" class="idquestion" value="'.$qvalue['idquestion'].'" name="idquestion" 
+													data-type="'.$qvalue['type'].'"/>';
 										switch($qvalue['type']){
 											case 'scale':
 												$responses = $set->getQuestionResponses( $idquestion );
 												foreach($responses as $rkey => $rvalue){
 													echo '<div class="formRow">';
-													echo '<input name="question'.$qkey.'response" type="radio" id="question'.$qkey.'response'.$rkey.'" value='.$rvalue['value'].'>';
+													echo '<input class="answer" name="q'.$qkey.'" type="radio" 
+																id="question'.$qkey.'response'.$rkey.'" value="'.$rvalue['value'].'"
+																data-question="'.$qvalue['idquestion'].'" 
+																data-question-response="'.$rvalue['idquestion_response'].'" 
+																>';
 													echo '<label for="question'.$qkey.'response'.$rkey.'">'.$rvalue['value'].' <span>'.$rvalue['label'].'</span></label>';
 													echo '</div>';
 												}
@@ -112,25 +141,41 @@
 												$responses = $set->getQuestionResponses( $idquestion );
 												foreach($responses as $rkey => $rvalue){
 													echo '<div class="formRow">';
-													echo '<input name="question'.$qkey.'response" type="checkbox" id="question'.$qkey.'response'.$rkey.'" value='.$rvalue['value'].'>';
-													echo '<label for="question'.$qkey.'response'.$rkey.'">'.$rvalue['value'].'<span>'.$rvalue['label'].'</span></label>';
+													echo '<input class="answer" name="q'.$qkey.'" type="checkbox" 
+																id="question'.$qkey.'response'.$rkey.'" value="'.$rvalue['value'].'"
+																data-question="'.$qvalue['idquestion'].'" 
+																data-question-response="'.$rvalue['idquestion_response'].'" 
+																>';
+													echo '<label for="question'.$qkey.'response'.$rkey.'"><span>'.$rvalue['label'].'</span></label>';
 													echo '</div>';
 												}
 											break;
 											case 'radio':
+												$responses = $set->getQuestionResponses( $idquestion );
+												foreach($responses as $rkey => $rvalue){
+													echo '<div class="formRow">';
+													echo '<input class="answer" name="q'.$qkey.'" type="radio" 
+																id="question'.$qkey.'response'.$rkey.'" value="'.$rvalue['value'].'"
+																data-question="'.$qvalue['idquestion'].'" 
+																data-question-response="'.$rvalue['idquestion_response'].'" 
+																>';
+													echo '<label for="question'.$qkey.'response'.$rkey.'"><span>'.$rvalue['label'].'</span></label>';
+													echo '</div>';
+												}
 											break;
 											case 'long':
-												echo '<textarea name="question'.$qkey.'long"></textarea>';
+												echo '<textarea class="answer" name="answer" id="question'.$qkey.'long"
+																data-question="'.$qvalue['idquestion'].'"></textarea>';
 											break;
 											case 'short':
-												echo '<input type="text" name="question'.$qkey.'short"/>';
+												echo '<input class="answer" type="text" name="answer" id="question'.$qkey.'short"
+																data-question="'.$qvalue['idquestion'].'" />';
 											break;
 										}
 									echo '</div>';
 								}
 								echo '</div>';
 								echo '</form>';
-
 						break;
 					}
 
@@ -149,18 +194,5 @@
 </main>
 
 <?php include('modal.php');?>
-<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/cferdinandi/tabby@12/dist/js/tabby.polyfills.js"></script> -->
-<script type="text/javascript" src="script/tabby.polyfills.js"></script>
-<script type="text/javascript">
-	const tabsSurveys = new Tabby('[data-tabs]');
-	const idcampain = document.getElementById('idcampain').value;
-	const idpanelist = document.getElementById('idpanelist').value;
-	const _order = document.getElementById('_order').value;
-	const _type = document.getElementById('typeSurvey').value;
-	if(_type == 'samples'){
-		const numberSamples = document.getElementById('numberSamples').value;
-		console.log(numberSamples);
-	}
-
-
-</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/cferdinandi/tabby@12/dist/js/tabby.polyfills.js"></script>
+<script type="text/javascript" src="script/campain-answers.js"></script>

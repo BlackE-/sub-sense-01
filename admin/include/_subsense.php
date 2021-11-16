@@ -447,7 +447,6 @@
 			return $returnValue; 
 		}
 
-
 		function updateSurvey( $name, $description, $type, $idsurvey ){
 			$returnValue = true;
 			$this->checkDBLogin();
@@ -596,7 +595,8 @@
 		function getQuestionResponses( $idquestion ){
 			$returnValue = true;
 			$this->checkDBLogin();
-			$qry = 'SELECT 	question_response._order, question_response.question_idquestion,question_response.response_idresponse,
+			$qry = 'SELECT 	question_response.idquestion_response,question_response._order,
+							question_response.question_idquestion,question_response.response_idresponse,
 							response.idresponse,response.label,response.value
 					FROM 	question_response,response
 					WHERE  	question_response.response_idresponse = response.idresponse
@@ -619,6 +619,189 @@
 				}
 			}
 			return $returnValue;
+		}
+
+
+
+		/*		ANSWERS 	*/
+		function saveAnswer($value,$idquestion_response,$idquestion,$idsample,$iduser){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$formvars = array();
+			$formvars['value'] = $this->Sanitize($value);
+			$formvars['idquestion_response'] = $this->Sanitize($idquestion_response);
+			$formvars['idquestion'] = $this->Sanitize($idquestion);
+			$formvars['idsample'] = $this->Sanitize($idsample);
+			$formvars['iduser'] = $this->Sanitize($iduser);
+
+			if($idquestion_response == "null" || $idsample == ""){
+				$updateTemporal = "SET foreign_key_checks = 0";
+				$result = $this->db->updateQuery($updateTemporal);
+			}
+
+				$qry = "INSERT into answer (value, question_response_idquestion_response, question_idquestion,sample_idsample,_user_iduser) values ('"
+						.$formvars['value'] . "','"
+						.$formvars['idquestion_response'] . "','"
+						.$formvars['idquestion'] . "','"
+						.$formvars['idsample'] . "','"
+						.$formvars['iduser'] . "')";
+				$result = $this->db->insertQuery($qry);
+				if(!$result){
+					$this->db->HandleDBError('No INSERT' . $qry);
+					$returnValue = false;
+				}else{
+					$idanswer = $this->db->lastInsertID();
+					$returnValue = $idanswer;
+				}
+
+			if($idquestion_response == "null" || $idsample == ""){
+				$updateTemporal = "SET foreign_key_checks = 1";
+				$result = $this->db->updateQuery($updateTemporal);
+			}
+
+			$this->db->closeAll();
+		    return $returnValue;
+		}
+
+		function getAnswer($idquestion,$idsample,$idpanelist){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$formvars = array();
+			$formvars['idquestion'] = $this->Sanitize($idquestion);
+			$formvars['idsample'] = $this->Sanitize($idsample);
+			$formvars['idpanelist'] = $this->Sanitize($idpanelist);
+
+			if($idsample == ''){
+				$qry = 'SELECT * from answer WHERE question_idquestion = '.$idquestion . ' AND _user_iduser='.$idpanelist;
+			}else{
+				$qry = 'SELECT * from answer WHERE question_idquestion = '.$idquestion . ' AND sample_idsample='.$idsample.' AND _user_iduser='.$idpanelist;
+			}
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin respuestas');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin respuestas');
+					$returnValue = false;
+				}else{
+					
+					$algo = [];
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo,$row);
+					}
+					$returnValue = sizeof($algo);
+					if(sizeof($algo) == 1){
+						//radio , short, long, scale
+						$returnValue = ['once'=>true,'idanswer'=>$algo[0]['idanswer'],'value'=>$algo[0]['value']];
+					}else{
+						// checkbox
+						$returnValue = ['once'=>false,'answers'=>$algo];
+					}
+					
+				}
+			}
+			return $returnValue; 
+		}
+
+		function updateAnswer($idanswer,$value,$idquestion_response){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$formvars = array();
+			$formvars['value'] = $this->Sanitize($value);
+			$formvars['idquestion_response'] = $this->Sanitize($idquestion_response);
+
+			if($idquestion_response == ''){
+				$qry = 'UPDATE answer SET value="'.$formvars['value'].'" WHERE idanswer = '.$idanswer;
+			}else{
+				$qry = 'UPDATE answer SET value="'.$formvars['value'].'",question_response_idquestion_response="'.$formvars['idquestion_response'].'" WHERE idanswer = '.$idanswer;
+			}
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin respuestas');
+				$returnValue = false;
+			}else{
+				$returnValue = $result;
+			}
+			return $returnValue; 
+		}
+
+		function updateAnswerMultiple($idanswer,$value,$idquestion_response,$idquestion,$idsample,$idpanelist){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$formvars = array();
+			$formvars['idanswer'] = $this->Sanitize($idanswer);
+			$formvars['value'] = $this->Sanitize($value);
+			$formvars['idquestion_response'] = $this->Sanitize($idquestion_response);
+			$formvars['idquestion'] = $this->Sanitize($idquestion);
+			$formvars['idsample'] = $this->Sanitize($idsample);
+			$formvars['iduser'] = $this->Sanitize($idpanelist);
+
+			//si en el array que regresa al buscar usando los idanswer ya existe id question response ese dato se elimina
+			$qry = 'SELECT idanswer from answer 
+						WHERE question_response_idquestion_response='.$formvars['idquestion_response'].' 
+						AND question_idquestion = '.$formvars['idquestion'].'
+						AND _user_iduser='.$formvars['iduser'];
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin muestras');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$returnValue = 'no existe ' . $qry;
+					// 	//si no esta en la base de datos ingresarlo
+					if($idsample == ""){
+						$updateTemporal = "SET foreign_key_checks = 0";
+						$result = $this->db->updateQuery($updateTemporal);
+					}
+
+					$this->db->HandleError('Sin respuestas');
+					$returnValue = false;
+					$qry = "INSERT into answer (value, question_response_idquestion_response, question_idquestion,sample_idsample,_user_iduser) values ('"
+							.$formvars['value'] . "','"
+							.$formvars['idquestion_response'] . "','"
+							.$formvars['idquestion'] . "','"
+							.$formvars['idsample'] . "','"
+							.$formvars['iduser'] . "')";
+					$result = $this->db->insertQuery($qry);
+					if(!$result){
+						$this->db->HandleDBError('No INSERT' . $qry);
+						$returnValue = false;
+					}else{
+						$last_idanswer = $this->db->lastInsertID();
+						$returnValue = $idanswer;
+					}
+
+					if($idsample == ""){
+						$updateTemporal = "SET foreign_key_checks = 1";
+						$result = $this->db->updateQuery($updateTemporal);
+					}
+
+					array_push($idanswer,$last_idanswer);
+					$returnValue = $idanswer;
+				}
+				else{
+					//si ya existe es que hay que eliminarlo
+					$algo = $row = $this->db->fetchAssoc($result);
+					$last_idanswer = $algo['idanswer'];
+					// $returnValue = 'ya existía' . $last_idanswer;
+					$qry = 'DELETE from answer WHERE idanswer = '.$last_idanswer .' AND question_response_idquestion_response='.$idquestion_response;
+					$result = $this->db->deleteQuery($qry);
+
+					$index2delete = array_search($last_idanswer,$idanswer);
+					unset($idanswer[$index2delete]);
+
+					$returnValue = $idanswer;
+				}
+			}
+
+			return $returnValue; 
+
+
 		}
 
 
