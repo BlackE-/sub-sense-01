@@ -209,3 +209,19 @@
 		}
 	}
 	window.onload = setCampainAnswer();
+
+	modalFunction = () =>{
+		openModalFunction();
+		setTimeout(function(){
+			closeModalFunction();
+		},2000);
+	}
+	const saveSurveyTop = document.getElementById('saveSurveyTop');
+	const saveSurveyBottom = document.getElementById('saveSurveyBottom');
+	const changePanelist = document.getElementById('changePanelist');
+	saveSurveyTop.addEventListener('click',modalFunction);
+	saveSurveyBottom.addEventListener('click',modalFunction);
+	changePanelist.addEventListener('click',function(){
+		console.log(`${window.location.href}/campain-answer?idcampain=${idcampain}`);
+		// window.location.href = `${window.location.href}/campain-answer?idcampain=${idcampain}`;
+	});

@@ -11,6 +11,16 @@
     
 
     switch($request){
+        case 'getCampainsCount':
+            $response['return'] = $set->getCampainsCount();
+            $response['message'] = $set->getErrorMessage();
+        break;
+        case 'getPanelistCount':
+            session_start();
+            $response['return'] = $set->getPanelistCount($_SESSION[$set->GetLoginSessionVar()] , 5);
+            $response['message'] = $set->getErrorMessage();
+        break;
+
         case "getUsersModerator":
             $type = $decoded['type'];
             session_start();

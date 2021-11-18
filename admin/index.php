@@ -28,9 +28,20 @@
 	<main id="main" class="main">
 		<?php include('sidebar.php');?>
 		<section id="dashboardContainer">
-			<a href="https://localhost/sub-sense/sub-sense-01/admin/campain-add-surveys.php?idcampain=14">LINK DE DAR DE ALTA UESTIONARIO</a>
+			<div class="card clientsCountContainer">
+				<h2>Panelistas</h2>
+				<input type="text" id="panelistCount" />
+			</div>
+			<div class="card campainsCountContainer">
+				<h2>Campañas</h2>
+				<input type="text" id="campainsCount"/>
+			</div>
+
+
+			<!-- <a href="https://localhost/sub-sense/sub-sense-01/admin/campain-add-surveys.php?idcampain=14">LINK DE DAR DE ALTA UESTIONARIO</a> -->
 		</section>
 	</main>
 	<?php include('footer.php');?>
+	<script type="text/javascript" src="script/index.js"></script>
 </body>
 </html>

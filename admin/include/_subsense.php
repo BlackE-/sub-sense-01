@@ -121,6 +121,31 @@
 			return $returnValue; 
 		}
 
+		function getPanelistCount($moderator, $type){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT 	COUNT(_user.folio) as TOTAL,_user.iduser,_user.type,
+							_usersrelation.moderator, _usersrelation.panelist 
+					from _user,_usersrelation
+					WHERE _user.iduser = _usersrelation.panelist
+					AND _usersrelation.moderator='.$moderator 
+					.' AND _user.type='.$type;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleDBError('Sin usuarios');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin usuarios');
+					$returnValue = false;
+				}else{
+					$row = $this->db->fetchAssoc($result);
+					$returnValue = $row['TOTAL'];
+				}
+			}
+			return $returnValue; 
+		}
+
 		function insertUser( $folio, $firstname, $lastname, $username, $email, $password, $type , $dob, $sex, $nse ){
 			$this->checkDBLogin();
 
@@ -337,6 +362,27 @@
 						array_push($algo, $row);
 					}
 					$returnValue = $algo;
+				}
+			}
+			return $returnValue; 
+		}
+
+		function getCampainsCount(){
+			$returnValue = true;
+			$this->checkDBLogin();
+
+			$qry = 'SELECT COUNT(idcampain) AS TOTAL from campain';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin Campañas');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin Campañas');
+					$returnValue = false;
+				}else{
+					$row = $this->db->fetchAssoc($result);
+					$returnValue = $row['TOTAL'];
 				}
 			}
 			return $returnValue; 

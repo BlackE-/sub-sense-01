@@ -17,7 +17,7 @@
 		<div class="surveysContainer">
 			<div class="titleContainer"><h1 class="title">Cuestionario #<?php echo $_order?></h1></div>
 			<div class="row buttonContainer">
-				<button class="save" id=""><i class="bi bi-arrow-left"></i> <span>Cambiar Panelista</span></button>
+				<button class="save" id="changePanelist"><i class="bi bi-arrow-left"></i> <span>Cambiar Panelista</span></button>
 				<button class="save" id="saveSurveyTop"><i class="bi bi-save2"></i> <span>Guardar</span></button>
 			</div>
 			<div class="row formContainer">
