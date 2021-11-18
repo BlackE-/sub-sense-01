@@ -65,6 +65,24 @@
 		    return true;
 	    }
 
+	    function registerUser($email,$password,$type){
+	    	$returnValue = true;
+	    	
+	    	$formvars = array();
+			$formvars['email'] = $this->Sanitize($email);
+			$formvars['password'] = password_hash($this->Sanitize($password), PASSWORD_DEFAULT);
+			$formvars['type'] =  $this->Sanitize($_type);		
+			$qry = "INSERT into _user (email,type,_password,date_created) values ('"
+						.$formvars['email'] . "','"
+						.$formvars['type'] . "','"
+						.$formvars['password']."',NOW())";
+			if(!$this->db->insertQuery($qry)){
+				$returnValue = false;
+				$this->db->HandleError('No registro' . $qry);
+			}
+			return $returnValue;
+		}
+
 
 		/*
 			users

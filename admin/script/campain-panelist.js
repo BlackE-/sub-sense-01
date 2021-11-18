@@ -10,15 +10,20 @@ const selectPanelist = document.getElementById('selectPanelist');
 		.then(response => response.json())
 		.then(data => {
 			if(!data.return){
-				return;
+				openModalFunction();
+					modalSetMessage('Sin Panelistas');
+					setTimeout(function(){
+						closeModalFunction();
+						window.history.back();
+					},2000);
+				// return;
 			}else{
-				const users = data.return;
 				users.forEach((item)=>{
 					let opt = document.createElement("option");
 					opt.value = item.iduser;
 					opt.text = `${item.firstname} ${item.lastname}`;
 					selectPanelist.elements['panelist'].add(opt, null);
-				})
+				});
 			}
 		})
 		.catch((error) => {

@@ -14,6 +14,7 @@
 		<button id="back">REGRESAR</button>
 	</section>
 </main>
+<?php include("modal.php");?>
 
 
 <script type="text/javascript" src="script/campain-panelist.js"></script>

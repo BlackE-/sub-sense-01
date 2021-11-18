@@ -205,5 +205,6 @@
 
     
     header('Content-Type: application/json; charset=utf-8');
+    unset($set);
     echo json_encode($response);
 ?>
