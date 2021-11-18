@@ -222,6 +222,7 @@
 	saveSurveyTop.addEventListener('click',modalFunction);
 	saveSurveyBottom.addEventListener('click',modalFunction);
 	changePanelist.addEventListener('click',function(){
-		console.log(`${window.location.href}/campain-answer?idcampain=${idcampain}`);
-		// window.location.href = `${window.location.href}/campain-answer?idcampain=${idcampain}`;
+		let url = window.location.href;
+		let newURL = `${url.substring(0, url.lastIndexOf('/'))}/campain-panelist?idcampain=${idcampain}`; 
+		window.location.href = newURL;
 	});

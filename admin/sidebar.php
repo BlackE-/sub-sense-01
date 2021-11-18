@@ -15,7 +15,7 @@
 		</li>
 
 		<li class="menu" id="menu2">
-			<a href="#">
+			<a href="reports">
 				<i class="bi bi-bar-chart-fill"></i>
 				<span>Reportes</span>
 			</a>
