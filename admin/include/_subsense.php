@@ -222,7 +222,7 @@
 			$formvars['_default'] = $this->Sanitize($_default);
 			$formvars['iduser'] = $iduser;
 
-			$qry = "INSERT into direction (addressline1, addressline2, betweenstreet1, betweenstreet2, zone, city, zipcode, state, country, notes, phone, name, _default, user_iduser) values ('"
+			$qry = "INSERT into direction (addressline1, addressline2, betweenstreet1, betweenstreet2, zone, city, zipcode, state, country, notes, phone, name, _default, _user_iduser) values ('"
 					.$formvars['addressline1'] . "','"
 					.$formvars['addressline2'] . "','"
 					.$formvars['betweenstreet1'] . "','"
@@ -275,7 +275,7 @@
 			if(!$idmedia){$formvars['idmedia'] = 1;}
 			else{$formvars['idmedia'] = $this->Sanitize($email);}
 
-			$qry = "INSERT into campain (name, html, status,user_iduser,media_idmedia,date_created) values ('"
+			$qry = "INSERT into campain (name, html, status,_user_iduser,media_idmedia,date_created) values ('"
 					.$formvars['name'] . "','"
 					.$formvars['html'] . "','"
 					.$formvars['status'] . "','"
@@ -315,7 +315,7 @@
 			else{					$formvars['media'] = $this->Sanitize($idmedia);}
 
 
-			$qry = "INSERT into survey (name, html, _order, type, repetition, media_idmedia , campain_idcampain, user_iduser,date_created) values ('"
+			$qry = "INSERT into survey (name, html, _order, type, repetition, media_idmedia , campain_idcampain, _user_iduser,date_created) values ('"
 					.$formvars['name'] . "','"
 					.$formvars['html'] . "','"
 					.$formvars['_order'] . "','"
@@ -1030,7 +1030,6 @@
 			return $str;
 		}
 	    function Sanitize($str,$remove_nl=true){
-	        $str = $this->StripSlashes($str);
 	        if($remove_nl){
 	            $injections = array('/(\n+)/i','/(\r+)/i', '/(\t+)/i','/(%0A+)/i','/(%0D+)/i','/(%08+)/i','/(%09+)/i');
 	            $str = preg_replace($injections,'',$str);
@@ -1041,10 +1040,6 @@
 	        if( function_exists( "mysql_real_escape_string" ) ){$ret_str = mysql_real_escape_string( $str );}
 	        else{$ret_str = addslashes( $str );}
 	        return $ret_str;
-	    } 
-	    function StripSlashes($str){
-	        if(get_magic_quotes_gpc()){ $str = stripslashes($str);}
-	        return $str;
 	    }
 	}
 ?>

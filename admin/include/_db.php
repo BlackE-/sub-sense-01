@@ -184,6 +184,7 @@
                 $create = "CREATE TABLE campain(
                                 idcampain INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                 name VARCHAR (45),
+                                html TEXT,
                                 status TINYINT(1),
                                 date_created DATETIME NULL,
                                 date_end DATETIME NULL,
@@ -351,7 +352,7 @@
                                     REFERENCES _user(iduser)
                                     ON DELETE NO ACTION ON UPDATE CASCADE
 
-                            ) SET FOREIGN_KEY_CHECKS = 0;";
+                            )";
                 $result = mysqli_query($this->connection,$create);
                 if(!$result){
                     $returnValue = false;

@@ -18,6 +18,7 @@ const selectPanelist = document.getElementById('selectPanelist');
 					},2000);
 				// return;
 			}else{
+				let users = data.return;
 				users.forEach((item)=>{
 					let opt = document.createElement("option");
 					opt.value = item.iduser;
