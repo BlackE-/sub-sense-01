@@ -62,6 +62,55 @@
             $response['message'] = $set->getErrorMessage();
         break;
 
+        case "getSurveysFromCampain":
+            $idcampain = $decoded['idcampain'];
+            $response['return'] = $set->getSurveys($idcampain);
+            $response['message'] = $set->getErrorMessage();
+        break;
+
+        case "getReport":
+            $idcampain = $decoded['idcampain'];
+            $idsurvey = $decoded['idsurvey'];
+            $surveyType = $decoded['surveyType'];
+            $idpanelist = $decoded['idpanelist'];
+
+
+            $questions = $set->getSurveyQuestions( $idsurvey );
+            $totalQuestions = count( $questions );
+            $totalAnswers = 0;
+            $samples = NULL;
+            $arrayData = [];
+            switch($surveyType){
+                case 'samples':
+                    $samples = $set->getSurveySamples($idsurvey);
+                    $totalQuestions = $totalQuestions * count($samples);
+                    for($x = 0; $x < count($samples); $x++){
+                        $arrayDataQA = [];
+                        for($y = 0; $y < count($questions); $y++){
+                            $respuesta = $set->getAnswer($questions[$y]['idquestion'],$samples[$x]['idsample'],$idpanelist);
+                            if(!$respuesta){}
+                            else{$totalAnswers++;}
+                            array_push($arrayDataQA,['question'=>$questions[$y]['html'],'answer'=>$respuesta]);
+                        }
+                        array_push($arrayData,['sample'=>$samples[$x],'faq'=>$arrayDataQA]);
+                    }
+                break;
+                default:
+                    for($y = 0; $y < count($questions); $y++){
+                        $respuesta = $set->getAnswer($questions[$y]['idquestion'],0,$idpanelist);
+                        if(!$respuesta){}
+                        else{$totalAnswers++;}
+                        array_push($arrayData,['question'=>$questions[$y]['html'],'answer'=>$respuesta]);
+                    }
+                break;
+            }
+
+            $response['return'] = ['totalQuestions'=>$totalQuestions,'totalAnswers'=>$totalAnswers,'QA'=>$arrayData];
+            $response['message'] = $set->getErrorMessage();
+        break;
+
+
+
 
 
         case "insertUser":

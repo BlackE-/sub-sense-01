@@ -137,5 +137,5 @@ saveNewUser.addEventListener('click',function(){
 	formData.append('country', 			country.value);
 	formData.append('phone', 			phone.value);
 
-	insertUser( formData );
+	fetchCall( formData );
 });

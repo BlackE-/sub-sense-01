@@ -67,7 +67,7 @@
 
 	    function registerUser($email,$password,$type){
 	    	$returnValue = true;
-	    	
+	    	$this->checkDBLogin();
 	    	$formvars = array();
 			$formvars['email'] = $this->Sanitize($email);
 			$formvars['password'] = password_hash($this->Sanitize($password), PASSWORD_DEFAULT);
@@ -80,6 +80,7 @@
 				$returnValue = false;
 				$this->db->HandleError('No registro' . $qry);
 			}
+			$this->db->closeAll();
 			return $returnValue;
 		}
 
@@ -108,13 +109,14 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
 		function getUsersModerator( $moderator, $type ){
 			$returnValue = true;
 			$this->checkDBLogin();
-			$qry = 'SELECT 	_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
+			$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
 							_usersrelation.moderator, _usersrelation.panelist 
 					from _user,_usersrelation
 					WHERE _user.iduser = _usersrelation.panelist
@@ -136,6 +138,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -161,6 +164,7 @@
 					$returnValue = $row['TOTAL'];
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -358,6 +362,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -382,6 +387,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -403,6 +409,7 @@
 					$returnValue = $row['TOTAL'];
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -426,6 +433,28 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
+			return $returnValue; 
+		}
+
+		function getSurvey( $idsurvey ){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from survey WHERE idsurvey=' . $idsurvey;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin CUESTIONARIOS');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin CUESTIONARIOS');
+					$returnValue = false;
+				}else{
+					$row = $this->db->fetchAssoc($result);
+					$returnValue = $row;
+				}
+			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -449,6 +478,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -469,6 +499,7 @@
 					$returnValue = $this->db->fetchAssoc($result);
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -485,6 +516,7 @@
 				$row = $this->db->fetchAssoc($result);
 				$returnValue = $row['NUMBER'];
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -508,6 +540,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -520,6 +553,7 @@
 				$this->db->HandleError('No update');
 				$returnValue = false;
 			}
+			$this->db->closeAll();
 			return $returnValue;
 		}
 
@@ -652,6 +686,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -682,6 +717,7 @@
 					$returnValue = $algo;
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue;
 		}
 
@@ -751,7 +787,6 @@
 					$this->db->HandleError('Sin respuestas');
 					$returnValue = false;
 				}else{
-					
 					$algo = [];
 					while($row = $this->db->fetchAssoc($result)){
 						array_push($algo,$row);
@@ -767,6 +802,7 @@
 					
 				}
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -790,6 +826,7 @@
 			}else{
 				$returnValue = $result;
 			}
+			$this->db->closeAll();
 			return $returnValue; 
 		}
 
@@ -862,10 +899,8 @@
 					$returnValue = $idanswer;
 				}
 			}
-
+			$this->db->closeAll();
 			return $returnValue; 
-
-
 		}
 
 

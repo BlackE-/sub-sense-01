@@ -10,12 +10,15 @@
 	<?php include('header.php');?>
 
 	<main id="main" class="main">
+		<a href="login"><button>Iniciar Sesión</button></a>
+
+		
 		<section id="index">
 			<figure class="logoContainer">
 				<img loading="lazy" src="img/SUB-icon-subchecker.svg" class="logo"/>
 			</figure>
 			<h1>SUB SENSE</h1>
-			<a href="login"><button>Iniciar Sesión</button></a>
+			
 		</section>
 	</main>
 	<?php include('footer.php');?>
@@ -31,5 +34,6 @@
 		checkLogin();
 		
 	</script>
+
 </body>
 </html>

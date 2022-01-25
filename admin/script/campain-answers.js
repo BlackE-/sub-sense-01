@@ -155,6 +155,16 @@
 
 					let answerInput = formSamples[index].getElementsByClassName('answer');
 					for(let a = 0; a< answerInput.length;a++){
+						if(answerInput[a].type == "textarea" || answerInput[a].type == "text"){
+							answerInput[a].addEventListener("input",(event)=>{
+								if(event.target.value.length > 50){
+									event.target.style.border = "1px solid var(--red-color)";
+									event.target.value = event.target.value.slice(0,50);   
+								}else{
+									event.target.style.border = "1px solid var(--blue-color)";
+								}
+							});
+						}
 						answerInput[a].addEventListener('change',(event)=>{
 							let answerForm = new FormData();
 							answerForm.append( 'request' , 'saveAnswer' );
@@ -187,6 +197,18 @@
 
 				let answerInput = formSurvey.getElementsByClassName('answer');
 				for(let a = 0; a< answerInput.length;a++){
+					if(answerInput[a].type == "textarea" || answerInput[a].type == "text"){
+						answerInput[a].addEventListener("input",(event)=>{
+							if(event.target.value.length > 50){
+								event.target.style.border = "1px solid var(--red-color)";
+								event.target.value = event.target.value.slice(0,50);   
+							}else{
+								event.target.style.border = "1px solid var(--blue-color)";
+							}
+						});
+					}
+
+
 					answerInput[a].addEventListener('change',(event)=>{
 						let answerForm = new FormData();
 						answerForm.append( 'request' , 'saveAnswer' );
