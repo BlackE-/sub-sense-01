@@ -17,27 +17,19 @@
 				<select id="campainList">
 					<option value="0">Seleccionar Campaña</option>
 				</select>
-				<!-- <button class="download" id="tabletoexcel"><i class="bi bi-download"></i> <span>Descargar</span></button> -->
-				<select id="surveysList">
-					<option value="0">Seleccionar Cuestionario</option>
-				</select>
+				<button id="doReport">Hacer Reporte</button>
+				<button class="download" id="tabletoexcel"><i class="bi bi-download"></i> <span>Descargar</span></button>
 			</div>
-			<div class="row">
-				<select id="panelist">
-					<option value="0">Seleccionar Panelista</option>
-				</select>
-				<button id="bringReport">Traer Información</button>
-			</div>
-			<div class="tableContainer">
-				<div id="totalContainer"></div>
-				<div id="dataContainer"></div>
+			<div class="tableContainer" id="dataContainer">
+				<table id="tableReport">
+					
+				</table>
 			</div>
 		</section>
 	</main>
 	<?php include("modal.php");?> 
 	<?php include('footer.php');?>
-	<!-- <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script> -->
-	<!-- <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
 	<script type="text/javascript" src="script/reports.js"></script>
 </body>
 </html>

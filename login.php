@@ -16,6 +16,7 @@
 					<img loading="lazy" src="img/SUB-icon-subchecker.svg" class="logo"/>
 				</figure>
 				<h1>SUB SENSE</h1>
+				<p>Pantalla para cuestionarios en línea</p>
 				<form id="loginForm">
 					<input type="text" name="email" placeholder="Correo Electrónico">
 					<input type="password" name="password" placeholder="Contraseña">

@@ -1,14 +1,14 @@
 	const dropdownCampains = document.getElementById("campainList");
-	const selectPanelist = document.getElementById('panelist');
-	const surveysList = document.getElementById('surveysList');
-	const bringReport = document.getElementById('bringReport');
-	const totalContainer = document.getElementById('totalContainer');
-	const dataContainer = document.getElementById('dataContainer');
-
+	const doReport = document.getElementById('doReport');
+	const tableReport = document.getElementById('tableReport');
 	let campainId = null;
-	let panelistId = null;
-	let surveyId = null;
-	let surveyType = null;
+
+	const button = document.querySelector("#tabletoexcel");
+	button.addEventListener("click", e => {
+	  TableToExcel.convert(tableReport,{name: "SUB-Sense-report.xlsx"});
+	});
+
+
 
 	fetchCall = ( answerData ) =>{
 		openModalFunction();
@@ -34,53 +34,41 @@
 							dropdownCampains.appendChild(option);
 						}
 					break;
-					case 'getUsersModerator':
-						for(let panelist of data.return){
-							var option = document.createElement("option");
-							option.text = `${panelist.firstname} ${panelist.lastname}`;
-							option.value = panelist.iduser;
-							selectPanelist.appendChild(option);
-						}
-					break;
-					case 'getSurveysFromCampain':
-						for(let survey of data.return){
-							var option = document.createElement("option");
-							option.text = survey.name;
-							option.value = survey.idsurvey;
-							option.setAttribute('type',survey.type);
-							surveysList.appendChild(option);
-						}
-					break;
-
 					case 'getReport':
+						//https://jsfiddle.net/totoe/2QN9z/   para hacer el excel 
 						let textData = '';
-						switch(surveyType){
-							case 'samples':
-								data.return.QA.forEach( sample => {
-									textData += `<h2>${sample.sample.name}</h2>`; 
-									sample.faq.forEach( item =>{
-										textData += ( !item.answer ) ? '' : `<p class="question">${item.question}</p><p class="answer">${item.answer.value}</p>`;
-									});
-								});
-							break;
-							default:
-								data.return.QA.forEach( item => {
-									if(typeof item.answer === 'object'){
-										textData += `<p class="question">${item.question}</p>`;
-										if(!item.answer.once){
-											item.answer.answers.forEach( ans =>{
-												textData += `<p class="answer">${ans.value}</p>`;
-											});
-										}else{
-											textData += `<p class="answer">${item.answer.value}</p>`;
-										}
-									}
-								});
-							break
-						}
-						dataContainer.innerHTML = textData;
-						totalContainer.innerHTML = `<div class="divisionContainer"><p><sup>${data.return.totalAnswers}</sup><span>/</span><sub>${data.return.totalQuestions}</sub></div>`;
+						let panelists = data.return.panelists;
+						// console.log(panelists);
 
+						let tblBody = document.createElement('tbody');
+						let row
+						panelists.map( ( panelist , index ) => {
+							if(index === 0){
+								//crear primer renglon de excel
+								
+							}
+							console.log(panelist);
+							console.log(panelist.folio);
+							console.log(panelist.data);
+							let row = document.createElement('tr');
+							let node = document.createElement('td');
+							let nodeText = document.createTextNode(`${panelist.folio}`);
+							node.appendChild(nodeText);
+							row.appendChild(node);
+							
+							let surveys = panelists.data;//elegir las preguntas de cada cuestionario para jacer 
+							surveys.map( survey => {
+
+						// 	// 	switch( survey.type ){
+						// 	// 		case 'samples':
+						// 	// 		break;
+						// 	// 		default:
+						// 	// 		break;
+						// 	// 	}
+							});
+							tblBody.appendChild(row);
+						});
+						tableReport.appendChild(tblBody);
 					break;
 				}
 			}
@@ -90,29 +78,14 @@
 		});
 	}
 
-	bringReport.addEventListener("click",function(){
+	doReport.addEventListener("click",function(){
 		let report = new FormData();
 		report.append( 'request' , 'getReport' );
-		if(campainId == dropdownCampains.value && surveyId == surveysList.value && panelistId ==  selectPanelist.value){return;}
-		else{campainId = dropdownCampains.value;surveyId=surveysList.value;panelistId=selectPanelist.value;surveyType=surveysList.selectedOptions[0].getAttribute("type");}
+		if(campainId == dropdownCampains.value){return;}
+		else{campainId = dropdownCampains.value;}
 		report.append( 'idcampain' , dropdownCampains.value );
-		report.append( 'idsurvey' , surveysList.value );
-		report.append( 'surveyType' , surveysList.selectedOptions[0].getAttribute("type")  );
-		report.append( 'idpanelist' , selectPanelist.value );
 		fetchCall( report );
-	})
-
-	dropdownCampains.addEventListener("change",function(event){
-		if(event.target.value == '0'){
-			return;
-		}
-		let campainForm = new FormData();
-		campainForm.append( 'request' , 'getSurveysFromCampain' );
-		campainForm.append( 'idcampain' , event.target.value );
-		fetchCall( campainForm );
 	});
-	
-
 
 	getCampains = () =>{
 		let campainsForm = new FormData();
@@ -121,12 +94,4 @@
 		fetchCall( campainsForm );
 	}
 
-	getPanelists = () =>{
-		let dataCampain = new FormData();
-		dataCampain.append( 'request' , 'getUsersModerator' );
-		dataCampain.append( 'type' , '5' );
-		fetchCall( dataCampain );
-	}
-
 	getCampains();
-	getPanelists();

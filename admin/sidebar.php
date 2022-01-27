@@ -20,5 +20,12 @@
 				<span>Reportes</span>
 			</a>
 		</li>
+
+		<li class="menu" id="menu3">
+			<a href="realtime">
+				<i class="bi bi-clock-history"></i>
+				<span>Tiempo Real</span>
+			</a>
+		</li>
 	</ul>
 </nav>
