@@ -126,7 +126,10 @@
 	const idpanelist = document.getElementById('idpanelist').value;
 	const _order = document.getElementById('_order').value;
 	const _type = document.getElementById('typeSurvey').value;
+	const goUp = document.getElementById('goUp');
+	goUp.addEventListener("click",()=>{window.scrollTo({top: 0,behavior: 'smooth'});});
 
+	
 	setCampainAnswer = () =>{
 		if(document.querySelector('[data-tabs]') !== null){
 			const tabsSurveys = new Tabby('[data-tabs]');

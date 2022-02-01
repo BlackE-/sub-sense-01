@@ -232,6 +232,7 @@ main section{padding: 50px 0;overflow: hidden;}
 #campainAnswer .surveysContainer form textarea,
 #campainAnswer .surveysContainer form button{margin: 0;}
 #campainAnswer .surveysContainer form .formRow label{padding: 10px;font-size: 1rem;}
+#campainAnswer #goUp{background: var(--blue-color-lighter);}
 
 #campainAnswer .surveysContainer form .questionHTMLContainer{padding-bottom: 20px;font-size: 1rem;}
 #campainAnswer .surveysContainer form .questionsContainer{padding: 20px;border: 1px solid var(--grey-color-darker);display: grid;grid-gap: 25px;}
@@ -246,11 +247,14 @@ main section{padding: 50px 0;overflow: hidden;}
 }
 
 
-#reportSection .tableContainer{display: grid;grid-gap: 20px;width: calc(100% - 40px);background: var(--white-color);box-shadow: 0px 4px 4px rgba(0,0,0,.25);padding: 20px;min-height: 25vh;}
+#reportSection .tableContainer{overflow-x: scroll;width: calc(100% - 40px);background: var(--white-color);box-shadow: 0px 4px 4px rgba(0,0,0,.25);padding: 20px;min-height: 25vh;}
 #reportSection .question{color: var(--blue-color);}
 #reportSection .answer{color: var(--red-color);text-align: right;}
 #reportSection .divisionContainer{width: 100px;margin-left: auto;box-shadow: 0px 10px 10px rgb(221, 221, 221);padding: 10px;height: 50px;display: grid;justify-content: center;align-items: center;font-size: 1.5rem;	}
-
+#reportSection table{border: 1px solid;text-align: left;}
+#reportSection table td{border-bottom: 1px solid;border-right: 1px solid;vertical-align: top;}
+#reportSection table td:last-child{border-right: 0px;}
+#reportSection table tr:last-child td{border-bottom: 0px;}
 
 footer{color: var(--white-color);padding: 15px 0;background: var(--dark-color);display: grid;grid-template-columns: 100px auto auto;align-items: center;justify-content: space-evenly;}
 footer .logo{max-width: 25px;}

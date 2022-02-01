@@ -43,6 +43,14 @@
 						}
 					break;
 					case 'getSurveysFromCampain':
+						if(surveysList.options.length > 1){
+							for(let x = 0;x <= surveysList.options.length + 1;x++){
+								console.log(x);
+								console.log(surveysList[x]);
+								surveysList.remove(surveysList[x]);
+							}
+						}
+						
 						for(let survey of data.return){
 							var option = document.createElement("option");
 							option.text = survey.name;

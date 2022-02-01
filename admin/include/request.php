@@ -64,7 +64,7 @@
 
         case "getSurveysFromCampain":
             $idcampain = $decoded['idcampain'];
-            $response['return'] = $set->getSurveys($idcampain);
+            $response['return'] = $set->getSurveysFromCampain($idcampain);
             $response['message'] = $set->getErrorMessage();
         break;
 
@@ -295,54 +295,6 @@
             }
             $response['return'] = ['panelists' => $dataArrayPanelist];
             $response['message'] = $set->getErrorMessage();
-
-
-            // for($x = 0 ; $x < count($surveys) ; $x++ ){
-            //     $dataArrayQN = [];
-            //     $type = $surveys[$x]['type'];
-            //     $questions = $set->getSurveyQuestions( $surveys[$x]['idsurvey'] );
-            //     $idsample = false;
-            //     switch($type){
-            //         case "samples":
-            //             $samples = $set->getSurveySamples($surveys[$x]['idsurvey']);
-            //             for( $i = 0 ; $i < count($panelists) ; $i++){
-            //                 $idpanelist = $panelists[$i]['iduser'];
-            //                 $dataArray = [];
-            //                 for($y = 0; $y < count($samples) ; $y++){
-            //                     $idsample = $samples[$y]['idsample'];
-            //                     $dataArraySample = [];
-            //                     for($a = 0; $a < count($questions); $a++){
-            //                         $respuesta = $set->getAnswer($questions[$a]['idquestion'],$samples[$y]['idsample'],$idpanelist);
-            //                         array_push($dataArraySample,['question'=>$questions[$a]['html'],'answer'=>$respuesta]);
-            //                     }
-            //                     array_push($dataArray,['idsample'=>$idsample,'dataSample'=>$dataArraySample]);
-            //                 }
-            //                 array_push($dataArrayQN,['iduser'=>$idpanelist,'dataUser'=>$dataArray]);
-            //             }
-            //         break;
-            //         default:
-            //             $samples = false;
-            //             for( $i = 0 ; $i < count($panelists) ; $i++){
-            //                 $idpanelist = $panelists[$i]['iduser'];
-            //                 $dataArray = [];
-            //                 for($a = 0; $a < count($questions); $a++){
-            //                     $respuesta = $set->getAnswer($questions[$a]['idquestion'],0,$idpanelist);
-            //                     array_push($dataArray,['question'=>$questions[$a]['html'],'answer'=>$respuesta]);
-            //                 }
-            //                 array_push($dataArrayQN,['iduser'=>$idpanelist,'dataUser'=>$dataArray]);
-            //             }
-            //         break;
-            //     }
-            //     array_push($dataArraySurveys,[
-            //         'survey'=>$surveys[$x]['name'],
-            //         'type'=>$type,
-            //         'samples'=>$samples,
-            //         'data'=>$dataArrayQN
-            //     ]);
-
-            // }
-            // $response['return'] = ['panelists'=>$panelists,'surveys'=>$dataArraySurveys];
-            // $response['message'] = $set->getErrorMessage();
         break;
     }
 

@@ -1,7 +1,7 @@
-        // const tabsSurveys = new Tabby('[data-tabs]');
+        const tabsSurveys = new Tabby('[data-tabs]');
         // const idcampain = document.getElementById('idcampain');
         // const surveys = document.querySelectorAll('form');
-        // // console.log(surveys);
+        // // // console.log(surveys);
 
         // fetchCall = ( dataFetch ) =>{
         //     let object = {};
@@ -92,6 +92,9 @@
         //     //     fetchCall( questionForm );
         //     // }
 
+
+
+            //4 
 
         // //     //una vez hecho eso colocar el ID de la pregunta en el html
         // //     // y empezar a guardar sus opciones

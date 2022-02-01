@@ -178,8 +178,7 @@
 								echo '</form>';
 						break;
 					}
-
-
+					echo '<button id="goUp">Subir</button>';
 				?>
 		</div>
 

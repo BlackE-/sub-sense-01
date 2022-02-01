@@ -461,7 +461,7 @@
 		function getSurveysFromCampain( $idcampain ){
 			$returnValue = true;
 			$this->checkDBLogin();
-			$qry = 'SELECT * from survey WHERE campain_idcampain = '.$idcampain;
+			$qry = 'SELECT * from survey WHERE campain_idcampain = '.$idcampain . ' ORDER BY _order';
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
 				$this->db->HandleError('Sin CUESTIONARIOS');
