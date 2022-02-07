@@ -2,29 +2,23 @@
 	header('Access-Control-Allow-Origin: *');
 	header('Content-type: application/json');
 
-	$all = $_POST;
-	$status = false;
+	$content = trim(file_get_contents("php://input"));
+    $decoded = json_decode($content, true); /* $decoded can be used the same as you would use $_POST in $.ajax */
 
-	if(isset($all) && !empty($all) ){
-		$status = true;
+	$status = true;
+	$myfile = fopen("setup.ini", "w") or die("Unable to open file!");
+	$txt = 'host="'.$decoded['host'].'";'.PHP_EOL;
+	$txt .= 'database="'.$decoded['database'].'";'.PHP_EOL;
+	$txt .= 'username="'.$decoded['username'].'";'.PHP_EOL;
+	$txt .= 'pwd="'.$decoded['password'].'";';
 
-		$myfile = fopen("setup.ini", "w") or die("Unable to open file!");
-		$txt = 'host='.$all['host'].';'.PHP_EOL;
-		$txt .= 'database='.$all['database'].';'.PHP_EOL;
-		$txt .= 'username='.$all['username'].';'.PHP_EOL;
-		$txt .= 'pwd='.$all['password'].';';
-		
-
-		fwrite($myfile, $txt);
-		fclose($myfile);
-
-	}
+	fwrite($myfile, $txt);
+	fclose($myfile);
 
 	//JSON RETURN
 	$json_return = array(
 		"return" => $status,
-		"msg" => "SETUP is set",
-		'data' => $all
+		'data' => $txt
 	);
 	echo json_encode($json_return);
 ?>

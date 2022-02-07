@@ -9,7 +9,7 @@
 	    		<div>
 	        		<img class="logo" src="../img/SUB-icon-subchecker.svg">
 	        		<h1 class="title">SUB Sense</h1>
-			        <form class="loginForm" id="form1">
+			        <form class="loginForm" id="loginForm">
 			        	<p class="topRegister"><b>BASE DE DATOS</b></p>
 			        	<p class="topRegister">Para comenzar a utilizar la plataforma necesitamos la siguiente información</p>
 				        	<div class="row">
@@ -22,7 +22,7 @@
 				        	    <input type="text" name="username" placeholder="Username" required/>
 				        	</div>
 				        	<div class="row">
-				        		<input type="password" name="pass1" placeholder="Password" required/>
+				        		<input type="password" name="password" placeholder="Password" required/>
 				        	</div>
 				        	<div class="row">
 				        		<input type="submit" class="submitLogin" value="Guardar">
