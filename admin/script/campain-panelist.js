@@ -22,7 +22,7 @@ const selectPanelist = document.getElementById('selectPanelist');
 				users.forEach((item)=>{
 					let opt = document.createElement("option");
 					opt.value = item.iduser;
-					opt.text = `${item.firstname} ${item.lastname}`;
+					opt.text = `${item.folio}`;
 					selectPanelist.elements['panelist'].add(opt, null);
 				});
 			}

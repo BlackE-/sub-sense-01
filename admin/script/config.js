@@ -12,6 +12,7 @@
     
 
     const formSubmit = (event) =>{
+        console.log(event);
         event.preventDefault();
         const email_element = document.querySelector('input[name="email"]');
 

@@ -6,7 +6,8 @@
 
 	const button = document.querySelector("#tabletoexcel");
 	button.addEventListener("click", e => {
-	  TableToExcel.convert(tableReport,{name: "SUB-Sense-report.xlsx"});
+		const formato = new Date();
+	  	TableToExcel.convert(tableReport,{name: `SUBSense_reporte-${formato.getFullYear()}/${formato.getMonth()+1}/${formato.getDate()} - ${formato.getHours()}:${formato.getMinutes()}.xlsx`});
 	});
 
 

@@ -2,8 +2,8 @@
 	require_once "_subsense.php";
 	$set = new Subsense();
 	$all = $_POST;
-	if(isset($all['email']) && isset($all['password'])){
-		$returnValue = $set->loginAdmin($all['email'],$all['password']);
+	if(isset($all['username']) && isset($all['password'])){
+		$returnValue = $set->login($all['username'],$all['password']);
 	}
 
 	//JSON RETURN

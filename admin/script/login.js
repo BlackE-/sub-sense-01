@@ -11,10 +11,11 @@
     }
     const formSubmit = (event) =>{
         event.preventDefault();
-        const email_element = document.querySelector('input[name="email"]');
-        if(email_element.value.length === 0){
-            addTemporaryClass(email_element ,'animated', 1000);
-            addTemporaryClass(email_element ,'swing', 1000);
+        openModalFunction();
+        const username_element = document.querySelector('input[name="username"]');
+        if(username_element.value.length === 0){
+            addTemporaryClass(username_element ,'animated', 1000);
+            addTemporaryClass(username_element ,'swing', 1000);
             return false;
         }
         const pass_element = document.querySelector('input[name="pass"]');
@@ -34,8 +35,11 @@
                 myObj = JSON.parse(this.response);
                 console.log(myObj);
                 if(!myObj.return){
-                     document.getElementById("error").innerHTML = myObj.message;
+                    modalHideLoading();
+                    modalSetMessage(myObj.message);
+                    setTimeout(closeModalFunction(),5000);
                 }else{
+                    closeModalFunction();
                     document.getElementById("error").innerHTML = myObj.message;
                     sessionStorage.setItem('iduser', myObj.return);
                     window.location.href = 'index';
@@ -45,7 +49,7 @@
         
         xhttp.open("POST", "include/LOGIN-login.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`email=${email_element.value}&password=${pass_element.value}`);
+        xhttp.send(`username=${username_element.value}&password=${pass_element.value}`);
          
     }
 

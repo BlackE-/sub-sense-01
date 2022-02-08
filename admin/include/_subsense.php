@@ -23,19 +23,19 @@
 	    /*
 			LOGIN
 	    */
-	    function loginAdmin($email,$password){
+	    function login($username,$password){
 	    	$returnValue = true;
 	    	$formvars = array();
 	    	$this->checkDBLogin();
-			$formvars['email'] = $this->Sanitize($email);	
-			$qry = "SELECT iduser,_password FROM _user WHERE email='".$formvars['email']."'";
+			$formvars['username'] = $this->Sanitize($username);	
+			$qry = "SELECT iduser,_password FROM _user WHERE username='".$formvars['username']."'";
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
-				$this->db->HandleDBError("1.No tenemos registro de: ".$email);
+				$this->db->HandleDBError("1.No tenemos registro de: ".$username);
 				$returnValue = false;
 			}else{
 				if(!$this->db->numRows($result)){
-					$this->db->HandleError("2.No tenemos registro de: ".$email);
+					$this->db->HandleError("2.No tenemos registro de: ".$username);
 		            $returnValue = false;
 		        }else{
 		        	$row = $this->db->fetchArray($result);
@@ -64,7 +64,9 @@
 		    unset($_SESSION[$sessionvar]);
 		    return true;
 	    }
-
+		/*
+			register
+		*/
 	    function registerUser($email,$password,$type){
 	    	$returnValue = true;
 	    	$this->checkDBLogin();
@@ -84,6 +86,67 @@
 			return $returnValue;
 		}
 
+		function registerUserWithUsername($email,$username,$password,$type){
+			$returnValue = true;
+	    	$this->checkDBLogin();
+	    	$formvars = array();
+			$formvars['email'] = $this->Sanitize($email);
+			$formvars['username'] = $this->Sanitize($username);
+			$formvars['password'] = password_hash($this->Sanitize($password), PASSWORD_DEFAULT);
+			$formvars['type'] =  $this->Sanitize($type);		
+			$qry = "INSERT into _user (username,email,type,_password,date_created) values ('"
+						.$formvars['username'] . "','"
+						.$formvars['email'] . "','"
+						.$formvars['type'] . "','"
+						.$formvars['password']."',NOW())";
+			if(!$this->db->insertQuery($qry)){
+				$returnValue = false;
+			}
+			$this->db->closeAll();
+			return $returnValue;
+		}
+		function getUserType($iduser){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT iduser,type from _user WHERE iduser='.$iduser;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin usuarios');
+				$returnValue = false;
+			}else{
+				$row = $this->db->fetchAssoc($result);
+				$returnValue = $row['type'];
+			}
+			$this->db->closeAll();
+			return $returnValue; 
+		}
+
+		/*
+			profile
+		*/
+		function getUserProfile($idprofile){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT iduser,type,firstname,lastname,username,email from _user WHERE iduser='.$idprofile;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin usuarios');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin usuarios');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			$this->db->closeAll();
+			return $returnValue; 
+		}
 
 		/*
 			users

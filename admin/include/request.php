@@ -9,8 +9,20 @@
     require('./_subsense.php');
     $set = new Subsense();
     
-
     switch($request){
+        case 'checkUser':
+            session_start();
+            $response['return'] = $set->getUserType($_SESSION[$set->GetLoginSessionVar()]);
+            $response['message'] = $set->getErrorMessage();
+        break;
+        case 'registerUser':
+            $_type = $decoded['_type'];
+            $username = $decoded['username'];
+            $email = $decoded['email'];
+            $password = $decoded['password'];
+            $response['return'] = $set->registerUserWithUsername($email,$username,$password,$_type);
+            $response['message'] = $set->getErrorMessage();
+        break;
         case 'getCampainsCount':
             $response['return'] = $set->getCampainsCount();
             $response['message'] = $set->getErrorMessage();
@@ -20,7 +32,11 @@
             $response['return'] = $set->getPanelistCount($_SESSION[$set->GetLoginSessionVar()] , 5);
             $response['message'] = $set->getErrorMessage();
         break;
-
+        case "getUserProfile":
+            session_start();
+            $response['return'] = $set->getUserProfile($_SESSION[$set->GetLoginSessionVar()]);
+            $response['message'] = $set->getErrorMessage();
+        break;
         case "getUsersModerator":
             $type = $decoded['type'];
             session_start();
@@ -48,6 +64,13 @@
         case "getSurveys":
             $response['return'] = $set->getSurveys();
             $response['message'] = $set->getErrorMessage();
+        break;
+        case "getNumberOfSurveys":
+            $idcampain = $decoded['idcampain']; 
+            $_numberOfSurveys = $set->getNumberOfSurveysOfCampain($idcampain);
+            if(!$_numberOfSurveys){$response['return'] = false;}
+            else{$response['return'] = $_numberOfSurveys;}
+            $response['message'] = $set->getErrorMessage(); 
         break;
         case "getAnswer":
             $idpanelist = $decoded['idpanelist'];
