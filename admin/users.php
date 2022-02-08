@@ -12,19 +12,23 @@
 		<?php include('sidebar.php');?>
 		<section id="usersSection">
 			<div class="titleContainer"><h1 class="title">Panelistas</h1></div>
-			<div class="row">
+			<div class="row" id="adminRow">
 				<a href="user-new"><button class="add" id="addPanelist"><i class="bi bi-person-plus-fill"></i> <span>Agregar panelista</span></button></a>
 				<button class="download" id="tabletoexcel"><i class="bi bi-download"></i> <span>Descargar</span></button>
 			</div>
 			<div class="row">
 				<a href="#"></a>
-				<button class="download" id="uploadPanelist"><i class="bi bi-upload"></i> <span>Importar Panelistas</span></button>
+				<div class="">
+					<p><i class="bi bi-upload"></i> <span>Importar Panelistas</span></p>
+					<input type="file" id="importUsers" accept=".csv"/>
+				</div>
 			</div>
 			<div class="tableContainer">
 				<table class="table" id="usersTable"></table>	
 			</div>
 		</section>
 	</main>
+	<?php include('modal.php');?>
 	<?php include('footer.php');?>
 	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>

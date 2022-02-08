@@ -2,6 +2,7 @@
 	const urlArray = newURL.split('/');
 	const urlActive = urlArray[urlArray.length-1];
 	const menuOptions = document.getElementsByClassName('menu');
+	let userType;
 	fetchCall = ( answerData ) =>{
 		let object = {};
 		answerData.forEach((value, key) => object[key] = value);
@@ -15,11 +16,17 @@
 			if(!data.return){
 				return;
 			}else{
-				console.log(data.return);
+				// console.log(data.return);
+				userType = data.return;
 				switch(data.return){
 					case '4':case '5':
 						menuOptions[3].style.display="none";
 						menuOptions[4].style.display="none";
+						switch(urlActive){
+							case "campains": case "users":
+								document.getElementById("adminRow").style.display = "none";
+							break;
+						}
 					break;
 				}
 			}

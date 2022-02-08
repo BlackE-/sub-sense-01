@@ -31,11 +31,11 @@
 			$qry = "SELECT iduser,_password FROM _user WHERE username='".$formvars['username']."'";
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
-				$this->db->HandleDBError("1.No tenemos registro de: ".$username);
+				$this->db->HandleDBError("1.No tenemos un nombre de usuario: ".$username);
 				$returnValue = false;
 			}else{
 				if(!$this->db->numRows($result)){
-					$this->db->HandleError("2.No tenemos registro de: ".$username);
+					$this->db->HandleError("2.No tenemos un nombre de usuario: ".$username);
 		            $returnValue = false;
 		        }else{
 		        	$row = $this->db->fetchArray($result);
@@ -176,15 +176,26 @@
 			return $returnValue; 
 		}
 
-		function getUsersModerator( $moderator, $type ){
+		function getUsersModerator( $moderator, $type, $userType ){
 			$returnValue = true;
 			$this->checkDBLogin();
-			$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
+			switch($userType){
+				case '1':
+					$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
 							_usersrelation.moderator, _usersrelation.panelist 
-					from _user,_usersrelation
-					WHERE _user.iduser = _usersrelation.panelist
-					AND _usersrelation.moderator='.$moderator 
-					.' AND _user.type='.$type;
+							from _user,_usersrelation
+							WHERE _user.iduser = _usersrelation.panelist
+							AND _user.type='.$type;
+				break;
+				default:
+					$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
+							_usersrelation.moderator, _usersrelation.panelist 
+							from _user,_usersrelation
+							WHERE _user.iduser = _usersrelation.panelist
+							AND _usersrelation.moderator='.$moderator 
+							.' AND _user.type='.$type;
+				break;
+			}
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
 				$this->db->HandleDBError('Sin usuarios');
@@ -289,7 +300,7 @@
 			$formvars['_default'] = $this->Sanitize($_default);
 			$formvars['iduser'] = $iduser;
 
-			$qry = "INSERT into direction (addressline1, addressline2, betweenstreet1, betweenstreet2, zone, city, zipcode, state, country, notes, phone, name, _default, _user_iduser) values ('"
+			$qry = "INSERT into direction (addressline1, addressline2, betweenstreet1, betweenstreet2, zone, city, zipcode, state, country, notes, phone, name, _default, user_iduser) values ('"
 					.$formvars['addressline1'] . "','"
 					.$formvars['addressline2'] . "','"
 					.$formvars['betweenstreet1'] . "','"

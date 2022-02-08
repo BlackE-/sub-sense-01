@@ -12,7 +12,7 @@
 		<?php include('sidebar.php');?>
 		<section id="usersSection">
 			<div class="titleContainer"><h1 class="title">Campañas</h1></div>
-			<div class="row">
+			<div class="row" id="adminRow">
 				<a href="campain-new"><button class="add" id="addPanelist"><i class="bi bi-plus"></i> <span>Agregar Campaña</span></button></a>
 				<button class="download" id="tabletoexcel"><i class="bi bi-download"></i> <span>Descargar</span></button>
 			</div>

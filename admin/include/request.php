@@ -39,8 +39,9 @@
         break;
         case "getUsersModerator":
             $type = $decoded['type'];
+            $userType = $decoded['userType'];
             session_start();
-            $response['return'] = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , $type);
+            $response['return'] = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , $type , $userType);
             $response['message'] = $set->getErrorMessage();
         break;
         case "getCampains":
@@ -120,7 +121,7 @@
                 $phone =            $decoded['phone'];
                 $name =             '';
                 $_default =         true;
-                $direction = $set->insertDirection( $addressline1, $addressline1,  $betweenstreet1 , $betweenstreet2, $zone, $city, $zipcode, $state, $country, $notes, $phone, $name,$_default, $iduser);
+                $direction = $set->insertDirection( $addressline1, $addressline2,  $betweenstreet1 , $betweenstreet2, $zone, $city, $zipcode, $state, $country, $notes, $phone, $name,$_default, $iduser);
                 if(!$direction){$response['return'] = $direction;}
                 session_start();
                 $relation = $set->insertuserrelation( $_SESSION[$set->GetLoginSessionVar()] , $iduser);
@@ -275,7 +276,7 @@
             $idcampain = $decoded['idcampain'];
             $surveys = $set->getSurveysFromCampain($idcampain);
             session_start();
-            $panelists = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , '5');
+            $panelists = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , '5','');
             $dataArrayPanelist = [];
 
             //el primer loop es de los panelistas

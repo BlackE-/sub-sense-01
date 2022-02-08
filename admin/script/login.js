@@ -24,20 +24,18 @@
             addTemporaryClass( pass_element ,'swing', 1000);
             return false;
         }
-        //open modal for loading
-        modal.style.display = "block";
         //ajax call
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                modal.style.display = "none";
                 console.log(this.response);
                 myObj = JSON.parse(this.response);
                 console.log(myObj);
                 if(!myObj.return){
+                    console.log("ERROR");
                     modalHideLoading();
                     modalSetMessage(myObj.message);
-                    setTimeout(closeModalFunction(),5000);
+                    // setTimeout(function(){closeModalFunction();},5000);
                 }else{
                     closeModalFunction();
                     document.getElementById("error").innerHTML = myObj.message;

@@ -141,6 +141,7 @@
                                 iduserrelation INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                 moderator INT UNSIGNED NOT NULL,
                                 panelist INT UNSIGNED NOT NULL,
+                                campain INT UNSIGNED NOT NULL,
 
                                 INDEX (moderator),
                                 INDEX (panelist),
@@ -151,6 +152,10 @@
 
                                 FOREIGN KEY (panelist)
                                     REFERENCES _user(iduser)
+                                    ON DELETE NO ACTION ON UPDATE CASCADE,
+                                
+                                FOREIGN KEY (campain)
+                                    REFERENCES campain(idcampain)
                                     ON DELETE NO ACTION ON UPDATE CASCADE
                             )";
                 $result = mysqli_query($this->connection,$create);
