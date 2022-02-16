@@ -31,9 +31,7 @@
 				}
 			}
 		})
-		.catch((error) => {
-		console.error('Error:', error);
-		});
+		.catch((error) => {console.error('Error:', error);});
 	}
 
 	//entrevistador no puede ver reportes ni tiempo real

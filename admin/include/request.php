@@ -128,7 +128,10 @@
                 $response['message'] = $set->getErrorMessage();
             }
         break;
-        case "insertCampain":   //alreasy insert surveys
+
+
+        /*  CAMPAINS  */
+        case "insertCampain":   //already insert surveys
             session_start();
             $iduser = $_SESSION[$set->GetLoginSessionVar()];
 
@@ -153,6 +156,29 @@
 
             }
         break;
+
+        case "getTotalSurveysFromCampain":
+            $idcampain = $decoded['idcampain'];
+            $response['return']=$set->getTotalSurveysFromCampain($idcampain);
+            $response['message'] = $set->getErrorMessage();
+        break;
+        case "getSurveyId":
+            $idcampain = $decoded['idcampain'];
+            $number = $decoded['number'];
+            $response['return']=$set->getSurveyId($idcampain,$number);
+            $response['message'] = $set->getErrorMessage();
+        break;
+        case "getSamples":
+            $idcampain = $decoded['idcampain'];
+            $idsurvey = $set->getSamplesSurvey($idcampain);
+            if(!$idsurvey){
+                $response['return'] = false;
+            }else{
+                $response['return'] = $set->getSamples($idsurvey);
+                $response['message'] = $set->getErrorMessage();
+            }
+        break;
+
         case "insertQuestion":
             $html =  $decoded['html'];
             $_order =  $decoded['_order'];
@@ -165,6 +191,7 @@
             $response['return'] = $idquestion;
             $response['message'] = $set->getErrorMessage();
         break;
+
         case "updateSurvey":
             $name =  $decoded['name'];
             $description =  $decoded['description'];
@@ -175,15 +202,18 @@
             $response['return'] = $sample;
             $response['message'] = $set->getErrorMessage();
         break;
+
         case "insertSample":
             $name =  $decoded['name'];
             $_order =  $decoded['_order'];
+            $code =  $decoded['code'];
             $idsurvey =  $decoded['idsurvey'];
 
-            $sample = $set->insertSample( $name,$_order,$idsurvey );
+            $sample = $set->insertSample( $name,$code,$_order,$idsurvey );
             $response['return'] = $sample;
             $response['message'] = $set->getErrorMessage();
         break;
+
         case "insertResponse":
             $value  =  $decoded['value'];
             $label =  $decoded['label'];
@@ -203,6 +233,7 @@
             }
             $response['message'] = $set->getErrorMessage();
         break; 
+
         case "saveAnswer":
             $value = $decoded['value'];
             $idpanelist = $decoded['idpanelist'];
@@ -321,6 +352,8 @@
             $response['message'] = $set->getErrorMessage();
         break;
     }
+
+
 
     
     header('Content-Type: application/json; charset=utf-8');

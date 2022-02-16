@@ -1,4 +1,17 @@
+let userType;
 const selectPanelist = document.getElementById('selectPanelist');
+fetchCall = ( answerData ) =>{
+	let object = {};
+	answerData.forEach((value, key) => object[key] = value);
+	fetch('./include/request.php', {
+	method: 'POST', // or 'PUT'
+	headers: {'Content-Type': 'application/json',},
+	body: JSON.stringify(object),
+	})
+	.then(response => response.json())
+	.then(data => {if(!data.return){return;}else{userType = data.return;}})
+	.catch((error) => {console.error('Error:', error);});
+}
 	getPanelists = ( dataFetch ) =>{
 		let object = {};
         dataFetch.forEach((value, key) => object[key] = value);
@@ -38,6 +51,14 @@ const selectPanelist = document.getElementById('selectPanelist');
 		return url.searchParams.get("idcampain"); 
 	}
 
+	//entrevistador no puede ver reportes ni tiempo real
+	checkUser = () =>{
+		let user = new FormData();
+		user.append( 'request' , 'checkUser' );
+		fetchCall( user );
+	}
+	checkUser();
+
 	const idcampain = getCampaindId();
 	if(!idcampain){window.location.href = 'campains';}
 	else{
@@ -45,6 +66,7 @@ const selectPanelist = document.getElementById('selectPanelist');
 		let dataCampain = new FormData();
 		dataCampain.append( 'request' , 'getUsersModerator' );
 		dataCampain.append( 'type' , '5' );
+		dataCampain.append( 'userType' , userType );
 		getPanelists( dataCampain );
 	}
 

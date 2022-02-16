@@ -594,6 +594,40 @@
 			return $returnValue; 
 		}
 
+		function getSurveyId($idcampain,$number){
+			//return only one
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT idsurvey from survey WHERE _order ='.$number.' AND campain_idcampain = '.$idcampain;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin cuestionario');
+				$returnValue = false;
+			}else{
+				$row = $this->db->fetchAssoc($result);
+				$returnValue = $row['idsurvey'];
+			}
+			$this->db->closeAll();
+			return $returnValue; 
+		}
+
+		function getSamplesSurvey($idcampain){
+			//return only ID of SURVEY TYPE SAMPLES
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT idsurvey from survey WHERE type = "samples" AND campain_idcampain = '.$idcampain;
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin cuestionario');
+				$returnValue = false;
+			}else{
+				$row = $this->db->fetchAssoc($result);
+				$returnValue = $row['idsurvey'];
+			}
+			$this->db->closeAll();
+			return $returnValue; 
+		}
+
 		function getSurveyQuestions($idsurvey){
 			$returnValue = true;
 			$this->checkDBLogin();
@@ -654,7 +688,7 @@
 					.$formvars['media'] . "')";
 			$result = $this->db->insertQuery($qry);
 			if(!$result){
-				$this->db->HandleDBError('No INSERT');
+				$this->db->HandleDBError('No INSERT'.$qry)	;
 				$returnValue = false;
 			}else{
 				$idquestion = $this->db->lastInsertID();
@@ -665,19 +699,21 @@
 		    return $returnValue;
 		}
 
-
-		function insertSample($name,$_order,$idsurvey){
+		/*	SAMPLES */
+		function insertSample($name,$code,$_order,$idsurvey){
 			$returnValue = true;
 			$this->checkDBLogin();
 
 			$formvars = array();
 			$formvars['_order'] = $this->Sanitize($_order);
 			$formvars['name'] = $this->Sanitize($name);
+			$formvars['code'] = $this->Sanitize($code);
 			$formvars['idsurvey'] = $this->Sanitize($idsurvey);
 
 
-			$qry = "INSERT into sample (name, _order, survey_idsurvey) values ('"
+			$qry = "INSERT into sample (name, code, _order, survey_idsurvey) values ('"
 					.$formvars['name'] . "','"
+					.$formvars['code'] . "','"
 					.$formvars['_order'] . "','"
 					.$formvars['idsurvey'] . "')";
 			$result = $this->db->insertQuery($qry);
@@ -688,6 +724,30 @@
 
 			$this->db->closeAll();
 		    return $returnValue;
+		}
+
+		function getSamples($idsurvey){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from sample WHERE survey_idsurvey = '.$idsurvey . ' ORDER BY _order';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin muestras');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin muestras');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row);
+					}
+					$returnValue = $algo;
+				}
+			}
+			$this->db->closeAll();
+			return $returnValue; 
 		}
 
 		function insertResponse($value,$label,$type){
@@ -1131,7 +1191,6 @@
 		/*	
 
 			FUNCTIONS TO WORK WITH MYSQL
-
 
 		*/
 		function removeWhitespaces($str){

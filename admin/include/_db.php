@@ -278,6 +278,7 @@
                 $create = "CREATE TABLE sample(
                             idsample INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             name VARCHAR(140),
+                            codigo SMALLINT,
                             _order TINYINT,
                             survey_idsurvey INT UNSIGNED,
                             

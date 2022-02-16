@@ -22,6 +22,8 @@
 					<input type="password" name="password" placeholder="Contraseña">
 					<input type="submit" name="submit" value="INICIAR SESIÓN">
 				</form>
+
+				<a href="./admin"><button style="padding:10px;">Cuestionarios con Panelistas</button></a>
 			</div>
 		</section>
 	</main>

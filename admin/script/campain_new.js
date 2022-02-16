@@ -22,7 +22,7 @@
 			}else{
 				console.log('Success:', data);
 				modalHideLoading();
-				const path = `campain-add-surveys?idcampain=${data.return}`;
+				const path = `campain-add-surveys-1?idcampain=${data.return}`;
 				modalSetMessage(data.message);
 				setTimeout(function(){
 					closeModalFunction();

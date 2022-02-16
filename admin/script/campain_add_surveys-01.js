@@ -1,15 +1,30 @@
-// const tabsSurveys = new Tabby('[data-tabs]');
+// http://localhost/2022/SUB-SENSE/sub-sense-01/admin/campain-add-surveys-1?idcampain=1
 
+const idcampain = document.getElementById('idcampain').value;
+const numberSurveys = document.getElementById("numberSurveys");
+const buttonFinal = document.getElementById("buttonFinal");
+const rowSamples = document.getElementById("rowSamples");
+const surveyForm = document.getElementById("survey");
+const questionForm = document.getElementById("questionForm");
+const samplesContainer = document.getElementById("samplesContainer");
+const addSamples = document.getElementById("addSamples");
+const addScale = document.getElementById("addScale");
+const scaleForm = document.getElementById("scaleForm");
+const orderForm = document.getElementById("orderForm");
+const orderSave = document.getElementById("orderSave");
+const nextSurvey = document.getElementById("nextSurvey");
 
-const idcampain = document.getElementById('idcampain');
-const surveys = document.querySelectorAll('form');
-// // console.log(surveys);
+let surveyData = new Array;
+let currentSurvey = 1;
+let currentQuestion = 1;
+let currentSample = 1;
+let currentScale = 1;
+let ordenacionLabel = '';
 
 fetchCall = ( dataFetch ) =>{
     let object = {};
     dataFetch.forEach((value, key) => object[key] = value);
     openModalFunction();
-
     fetch('./include/request.php', {
       method: 'POST', // or 'PUT'
       headers: {'Content-Type': 'application/json',},
@@ -17,21 +32,69 @@ fetchCall = ( dataFetch ) =>{
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        // console.log('Success:', data);
         if(!data.return){
             console.log(data.message);
         }else{
+            console.log(data.return);
             switch(object.request){
-                case 'getNumberOfSurveys':
-                    
+                case 'getSurveysFromCampain':
+                    data.return.map((item)=>{
+                        surveyData.push(item.idsurvey);
+                    });
+                    numberSurveys.value = surveyData.length;
+                break;
+                case 'getSurveyId':
+                    surveyForm.elements['idsurvey'].value = data.return;
+                break;
+                case "getSamples":
+                    let samplesHTML = '<p>Muestras</p>';
+                    ordenacionLabel = '';
+                    data.return.map((sample)=>{
+                        samplesHTML += `${sample.name} - ${sample.code}<br>`;
+                        ordenacionLabel += `${sample.name}-${sample.code},`
+                    });
+                    document.getElementById("samplesOrderForm").innerHTML = samplesHTML;
+                    ordenacionLabel = ordenacionLabel.slice(0, -1);     //remover la ultima coma
+                break;
+                case 'insertSample':
+                    modalHideLoading(); modalSetMessage(data.message);
+                    currentSample++;
+                    samplesContainer.innerHTML += `<p>${object.name} - ${object.code}</p>`;
+                    surveyForm.elements['sampleName'].value = '';surveyForm.elements['sampleCode'].value = '';
+                break;
+                case 'updateSurvey':
+                    surveyForm.reset();
+                    showQuestionForm();
+                    hideSurveyForm();
+                    showNextSurvey();
+                break;
+                case 'insertQuestion':
+                    currentSample = 1;
+                    document.getElementById("questionsContainer").innerHTML += `<p>${currentQuestion}. ${object.html}</p>`;
+                    currentQuestion++;
+                    switch(object.type){
+                        case "scale":
+                            questionForm.elements['idquestion'].value = data.return;
+                            showScaleForm();
+                        break;
+                        case "order":
+                            questionForm.elements['idquestion'].value = data.return;
+                            showOrderSave();
+                        break;
+                    }
+                break;
+                case 'insertResponse':
+                    document.getElementById("questionsContainer").innerHTML += `<p>${currentSample}. ${object.value} - ${object.label}</p>`;
+                    currentScale++;
+                    scaleForm.elements['questionScaleValue'].value = currentScale;
+                    scaleForm.elements['questionScaleLabel'].value = '';
+                break;
+
+                case '':
                 break;
             }
-            console.log('Success:', data);
-            modalHideLoading();
-            modalSetMessage(data.message);
-            setTimeout(function(){
-                closeModalFunction();
-            },5000);
+            setTimeout(function(){closeModalFunction();},5000);
         }
     })
     .catch((error) => {
@@ -39,121 +102,158 @@ fetchCall = ( dataFetch ) =>{
     });
 }
 
-// surveys.forEach((item,index)=>{
-//     console.log(item);
-//     let idsurvey = item.getAttribute('name');
-//     let surveyIndex = index+1;
-//     let type = item.elements['typeSurvey'].value;
-//     // 1
-//     //funcion para actualizar el cuestionario (nombre | descripcion | tipo )
-//     // let surveyForm = new FormData();
-//     // surveyForm.append('request', 'updateSurvey');
-//     // surveyForm.append ( "name" , item.elements['nameSurvey'].value);
-//     // surveyForm.append ( "description" , item.elements['descriptionSurvey'].value);
-//     // surveyForm.append ( "type" , item.elements['typeSurvey'].value);
-//     // surveyForm.append ( "idsurvey" , idsurvey);
-//     // fetchCall( surveyForm );
+showSamplesRow = () =>{rowSamples.style.display = "block";}
+hideSamplesRow = () =>{rowSamples.style.display = "none";}
+showButtonFinal = () =>{buttonFinal.style.display = "block";}
+hideButtonFinal = () =>{buttonFinal.style.display = "none";}
+showQuestionForm = () =>{questionForm.style.display = "block";}
+hideQuestionForm = () =>{questionForm.style.display = "none";}
+showSurveyForm = () =>{surveyForm.style.display = "block";}
+hideSurveyForm = () =>{surveyForm.style.display = "none";}
+showScaleForm = () =>{scaleForm.style.display = "block";}
+hideScaleForm = () =>{scaleForm.style.display = "none";}
+showOrderForm = () =>{orderForm.style.display = "block";}
+hideOrderForm = () =>{orderForm.style.display = "none";}
+showOrderSave = () =>{orderSave.style.display = "block";}
+hideOrderSave = () =>{orderSave.style.display = "none";}
+showNextSurvey = () =>{nextSurvey.style.display = "block";}
+hideNextSurvey = () =>{nextSurvey.style.display = "none";}
 
-// //     // 2 dependiendo del tipo de hacen ciertas cosas
-//     // switch(type){
-//     //     case 'samples':
-//     //         //  save samples
-//     //         /*  
+buttonFinal.addEventListener("click",function(){
+    openModalFunction();
+    window.location.href="campains";
+});
 
-//     //                 NO DESCOMENTAR PARA NO VOLVER A GGUARDAR LOS MISMOS SAMPLES
+orderSave.addEventListener("click",function(){
+    const ordenInsert = new FormData();
+    ordenInsert.append("request","insertResponse");
+    ordenInsert.append("value",'');
+    ordenInsert.append("label",ordenacionLabel);
+    ordenInsert.append("_order",1);
+    ordenInsert.append("type","ordenacion");
+    ordenInsert.append("idquestion",questionForm.elements['idquestion'].value);
 
-//     //         */
-//     //         let samples = item.elements['sampleValue'];
-//     //         samples.forEach((sample,index)=>{
-//     //             let sampleForm = new FormData();
-//     //             sampleForm.append('request', 'insertSample');
-//     //             sampleForm.append ( "name" , sample.value);
-//     //             sampleForm.append ( "_order" , index);
-//     //             sampleForm.append ( "idsurvey" , idsurvey);
-//     //             fetchCall( sampleForm );
-//     //         })
-//     //     break;
-//     //     case 'regular':
+    fetchCall(ordenInsert);
+})
+orderForm.addEventListener("submit",function(event){
+    event.preventDefault();
+    ordenacionLabel += `, ${orderForm.elements['questionOrderLabel'].value}-${orderForm.elements['questionOrderValue'].value}`;
+    openModalFunction();
+    document.getElementById("samplesOrderForm").innerHTML = ordenacionLabel;
+    orderForm.reset();
+    closeModalFunction();
+});
 
-//     //     break;
-//     // }
+nextSurvey.addEventListener("click",function(event){
+    event.preventDefault();
+    currentQuestion = 1;
+    currentSample = 1;
+    currentScale = 1;
+    currentSurvey++;
 
+    surveyForm.elements['numberSurvey'].value = currentSurvey;
+    hideQuestionForm();
+    hideSamplesRow();
+    hideScaleForm();
+    showSurveyForm();
+    showButtonFinal();
+});
 
-// //     // 3
-// //     //guardar las preguntas de cada cuestionario
-//     // let surveyQuestionCounter = item.elements['surveyQuestionCounter'].value;
-//     // console.log(surveyQuestionCounter);
-//     // for(let x = 1;x<=surveyQuestionCounter;x++){
-//     //     let questionName = item.elements[`survey${surveyIndex}question${x}name`].value;
-//     //     // console.log(questionName);
-//     //     let questionType = item.elements[`survey${surveyIndex}question${x}type`].value;
-//     //     // console.log(questionType);
+scaleForm.addEventListener("submit",function(event){
+    event.preventDefault();
+    const scaleInsert = new FormData();
+    scaleInsert.append("request","insertResponse");
+    scaleInsert.append("value",scaleForm.elements['questionScaleValue'].value);
+    scaleInsert.append("label",scaleForm.elements['questionScaleLabel'].value);
+    scaleInsert.append("_order",currentScale);
+    scaleInsert.append("type","scale");
+    scaleInsert.append("idquestion",questionForm.elements['idquestion'].value);
 
-//     //     let questionForm = new FormData();
-//     //     questionForm.append('request', 'insertQuestion');
-//     //     questionForm.append ( "html" , questionName);
-//     //     questionForm.append ( "_order" , x);
-//     //     questionForm.append ( "type" , questionType);
-//     //     questionForm.append ( "idsurvey" , idsurvey);
-//     //     questionForm.append ( "idmedia" , '');
-//     //     fetchCall( questionForm );
-//     // }
+    fetchCall(scaleInsert);
+});
 
+questionForm.elements['questionType'].addEventListener("change",function(event){
+    event.preventDefault();
+    switch(event.target.value){
+        // case "scale":showScaleForm();break;
+        case "order":
+            showOrderForm();
+            showOrderSave();
+            const samplesData = new FormData();
+            samplesData.append("request","getSamples");
+            samplesData.append("idcampain",idcampain);
+            fetchCall(samplesData);
+        break;
+        default:hideScaleForm();hideOrderForm();hideOrderSave();break;
+    }
+});
 
+questionForm.addEventListener("submit",function(event){
+    event.preventDefault();
+    console.log("questionForm submit");
+    const questionInsert = new FormData();
+    questionInsert.append("request","insertQuestion");
+    questionInsert.append("html",questionForm.elements['questionName'].value);
+    questionInsert.append("_order",currentQuestion);
+    questionInsert.append("type",questionForm.elements['questionType'].value);
+    questionInsert.append("idsurvey",surveyData[currentSurvey-1]);
+                                        //insert file from input file
+                                        //save in DB
+                                        //return idMedia
+    questionInsert.append("idmedia",'');
+    fetchCall(questionInsert);
+});
 
-    //4 
+surveyForm.addEventListener("submit",function(event){
+    event.preventDefault();
+    const surveyUpdate = new FormData();
+    surveyUpdate.append("request","updateSurvey");
+    surveyUpdate.append("idsurvey", surveyData[currentSurvey-1]);
+    surveyUpdate.append("name",surveyForm.elements['nameSurvey'].value);
+    surveyUpdate.append("description",surveyForm.elements['descriptionSurvey'].value);
+    surveyUpdate.append("type",surveyForm.elements['typeSurvey'].value);
+    fetchCall(surveyUpdate);
+});
 
-// //     //una vez hecho eso colocar el ID de la pregunta en el html
-// //     // y empezar a guardar sus opciones
-//     let surveyQuestionCounter = item.elements['surveyQuestionCounter'].value;
-//     for(let x = 1;x<=surveyQuestionCounter;x++){
-//         let idquestion = item.elements[`survey${surveyIndex}question${x}idquestion`].value;
-//         let questionType = item.elements[`survey${surveyIndex}question${x}type`].value;
-//         console.log(idquestion);
-//         // console.log(questionType);
-//         let responseForm = new FormData();
-//         responseForm.append("request","insertResponse");
-//         switch(questionType){
-//             case 'scale':
-//                 let scaleCounter = item.elements[`survey${surveyIndex}question${x}scale`].value;
-//                 // console.log(scaleCounter);
+addSamples.addEventListener("click",function(){
+    console.log("click");
+    const sampleName = surveyForm.elements['sampleName'].value;
+    const sampleCode= surveyForm.elements['sampleCode'].value;
+    if( sampleName == ""){openModalFunction();modalHideLoading();modalSetMessage("Nombre de Muestra vacia");setTimeout(function(){closeModalFunction()},2000);return;}
+    if( sampleCode == ""){openModalFunction();modalHideLoading();modalSetMessage("Nombre de Muestra vacia");setTimeout(function(){closeModalFunction()},2000);return;}
 
-//                 for(let y = 1;y<=scaleCounter;y++){
-//                     let scale = item.elements[`survey${surveyIndex}question${x}scale${y}`].value;
-//                     // console.log(scale);
-//                     let responseForm = new FormData();
-//                     responseForm.append("request","insertResponse");
-//                     responseForm.append("value",y);
-//                     responseForm.append("label",scale);
-//                     responseForm.append("type","scale");
-//                     responseForm.append("_order",y);
-//                     responseForm.append("idquestion",idquestion);
-//                     fetchCall(responseForm);
-//                 }
+    const idsurvey = surveyForm.elements['idsurvey'].value;
+    const samples = new FormData();
+    samples.append('request','insertSample');
+    samples.append('name',sampleName);
+    samples.append('code',sampleCode);
+    samples.append('_order',currentSample);
+    samples.append('idsurvey',idsurvey);
+    fetchCall(samples);
+});
 
+getSurveyId = () =>{
+    const survey = new FormData();
+    survey.append("request","getSurveyId");
+    survey.append("idcampain",idcampain);
+    survey.append("number",currentSurvey);
+    fetchCall(survey);
+}
 
-//             break;
-//             case 'checkbox':
-//                 let checkboxCounter = item.elements[`survey${surveyIndex}question${x}checkbox`].value;
-//                 // console.log(checkboxCounter);
+init = () =>{
+    hideQuestionForm();
+    hideButtonFinal();
+    hideScaleForm();
+    hideOrderForm();
+    hideOrderSave();
+    hideNextSurvey();
+    surveyForm.elements['numberSurvey'].value = currentSurvey;
 
-//                 for(let y = 1;y<=checkboxCounter;y++){
-//                     let checkbox = item.elements[`survey${surveyIndex}question${x}checkbox${y}`].value;
-//                     // console.log(checkbox);
+    const surveysNumber = new FormData();
+    surveysNumber.append("request","getSurveysFromCampain");
+    surveysNumber.append("idcampain",idcampain);
+    fetchCall(surveysNumber);
 
-//                     let responseForm2 = new FormData();
-//                     responseForm2.append("request","insertResponse");
-//                     responseForm2.append("value",checkbox);
-//                     responseForm2.append("label",checkbox);
-//                     responseForm2.append("type","checkbox");
-//                     responseForm2.append("_order",y);
-//                     responseForm2.append("idquestion",idquestion);
-//                     fetchCall(responseForm2);
-//                 }
-
-//             break;
-//             case 'radio':
-//             break;
-//         }
-//     }
-// });
+    getSurveyId();
+}
+init();

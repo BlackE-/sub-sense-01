@@ -208,8 +208,8 @@ main section{padding: 50px 0;overflow: hidden;}
 #campainAddSurveys .surveysContainer form .checkboxContainer{max-width: 50%;}
 #campainAddSurveys .surveysContainer form .checkboxContainer .square{width: 20px;height: 20px;border: 1px solid var(--grey-color-darker);}
 #campainAddSurveys .surveysContainer form .checkboxContainer .deleteRow{display: grid;grid-template-columns: 1fr 50px;justify-content: center;align-items: center;}
-#campainAddSurveys form input[type="submit"]{display: none;}
-
+#campainAddSurveys .totalCuestionarios{display: grid;grid-template-columns: 1fr 1fr;align-items: center;margin-bottom:20px;}
+#campainAddSurveys .totalCuestionarios input{margin:0;}
 
 
 
