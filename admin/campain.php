@@ -14,14 +14,14 @@
 			<div class="titleContainer"><h1 class="title">Campaña</h1></div>
 			<div class="row buttonContainer">
 				<a href="campains"><button class="add"><i class="bi bi-arrow-left"></i> <span>Regresar</span></button></a>
-				<button class="save" id="saveNewCampain"><i class="bi bi-save2"></i> <span>Guardar</span></button>
+				<button class="save" id="saveCampain"><i class="bi bi-save2"></i> <span>Guardar</span></button>
 			</div>
 			<div class="row formContainer">
 					<form id="campainForm">
 						<p class="title">Información Campaña</p>
 						<div class="formRow">
 							<p>Nombre</p>
-							<input type="text" name="getElementById" id="campainName" value="" />
+							<input type="text" name="campainName" id="campainName" value="" />
 						</div>
 
 						<div class="formRow">
@@ -32,19 +32,19 @@
 						<div class="formRow">
 							<p>Status</p>
 							<div class="halfRow">
-								<input type="checkbox" name="statusCampain" id="statusCampain">
+								<input type="checkbox" name="statusCampain" id="statusCampain" disabled>
 								<label for="statusCampain"><span>&nbsp;</span></label>
 							</div>
 						</div>
 
 						<div class="formRow">
 							<p>Fecha creación</p>
-							<input type="date" name="datecreatedCampain" disabled>
+							<input type="text" name="datecreatedCampain" disabled>
 						</div>
 
 						<div class="formRow">
 							<p>Fecha final</p>
-							<input type="date" name="dateendCampain">
+							<input type="text" name="dateendCampain">
 						</div>
 						<input type="submit" name="campainSubmit"/>
 					</form>
@@ -54,6 +54,7 @@
 		</section>
 	</main>
 	<?php include('footer.php');?>
+	<?php include('modal.php');?>
 	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
 	<script type="text/javascript" src="script/campain.js"></script>

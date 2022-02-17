@@ -181,11 +181,7 @@
 			$this->checkDBLogin();
 			switch($userType){
 				case '1':
-					$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
-							_usersrelation.moderator, _usersrelation.panelist 
-							from _user,_usersrelation
-							WHERE _user.iduser = _usersrelation.panelist
-							AND _user.type='.$type;
+					$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type from _user WHERE _user.type='.$type;
 				break;
 				default:
 					$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.nse,_user.dob,_user.sex,_user.iduser,_user.type,
@@ -216,15 +212,23 @@
 			return $returnValue; 
 		}
 
-		function getPanelistCount($moderator, $type){
+		function getPanelistCount($moderator, $type , $userType){
 			$returnValue = true;
 			$this->checkDBLogin();
-			$qry = 'SELECT 	COUNT(_user.folio) as TOTAL,_user.iduser,_user.type,
-							_usersrelation.moderator, _usersrelation.panelist 
-					from _user,_usersrelation
-					WHERE _user.iduser = _usersrelation.panelist
-					AND _usersrelation.moderator='.$moderator 
-					.' AND _user.type='.$type;
+			switch($userType){
+				case '1':
+						
+						$qry = 'SELECT 	COUNT(_user.folio) as TOTAL from _user WHERE _user.type='.$type;
+				break;
+				default:
+						$qry = 'SELECT 	COUNT(_user.folio) as TOTAL,_user.iduser,_user.type,
+								_usersrelation.moderator, _usersrelation.panelist 
+								from _user,_usersrelation
+								WHERE _user.iduser = _usersrelation.panelist
+								AND _usersrelation.moderator='.$moderator 
+								.' AND _user.type='.$type;
+				break;
+			}
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
 				$this->db->HandleDBError('Sin usuarios');
@@ -469,7 +473,7 @@
 			$returnValue = true;
 			$this->checkDBLogin();
 
-			$qry = 'SELECT COUNT(idcampain) AS TOTAL from campain';
+			$qry = 'SELECT COUNT(idcampain) AS TOTAL from campain WHERE status = 1';
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
 				$this->db->HandleError('Sin Campañas');
@@ -486,6 +490,25 @@
 			$this->db->closeAll();
 			return $returnValue; 
 		}
+
+		function updateCampain($name,$description,$status,$idcampain){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'UPDATE campain SET name="'.$name.'", html="'.$description.'", status="1" WHERE idcampain='.$idcampain;
+			if(!$status){
+				$qry = 'UPDATE campain SET name="'.$name.'", html="'.$description.'", status="0", date_end=NOW() WHERE idcampain='.$idcampain;
+			}
+			$result = $this->db->updateQuery($qry);
+			if(!$result){
+				$this->db->HandleError('No update campain'.$qry);
+				$returnValue = false;
+			}
+			$this->db->closeAll();
+			return $returnValue;
+		}
+
+
+		/*	SURVEYS */
 
 		function getSurveys(){
 			$returnValue = true;
@@ -928,7 +951,7 @@
 					$returnValue = sizeof($algo);
 					if(sizeof($algo) == 1){
 						//radio , short, long, scale
-						$returnValue = ['once'=>true,'idanswer'=>$algo[0]['idanswer'],'value'=>$algo[0]['value']];
+						$returnValue = ['once'=>true,'idanswer'=>$algo[0]['idanswer'],'value'=>$algo[0]['value'],'idquestionresponse'=>$algo[0]['question_response_idquestion_response']];
 					}else{
 						// checkbox
 						$returnValue = ['once'=>false,'answers'=>$algo];
@@ -938,6 +961,32 @@
 			}
 			$this->db->closeAll();
 			return $returnValue; 
+		}
+
+		function getResponseLabel($idquestion){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT response.label, response.idresponse,
+							question_response.idquestion_response,question_response.question_idquestion 
+							from response, question_response
+					WHERE response.idresponse = question_response.idquestion_response
+					AND question_response.question_idquestion = '.$idquestion;
+			
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin respuestas');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin respuestas');
+					$returnValue = false;
+				}else{
+					$row = $this->db->fetchAssoc($result);
+					$returnValue = $row['label'];
+				}
+			}
+			$this->db->closeAll();
+			return $returnValue;
 		}
 
 		function updateAnswer($idanswer,$value,$idquestion_response){

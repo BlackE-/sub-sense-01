@@ -150,6 +150,29 @@
 													echo '</div>';
 												}
 											break;
+											case 'order':
+												$responses = $set->getQuestionResponses( $idquestion );
+												echo "<div class='sortContainer'>";
+												echo "<div>";
+												$options = explode(",",$responses[0]['label']);
+												for($x = 1;$x <= count($options);$x++){
+													echo '<div class="answerOrder" id="'.$x.'">';
+													echo '<p>'.$x.'</p>';
+													echo '</div>';
+												}
+												echo 	"</div>";
+												echo 	"<div class='list'>";
+												foreach($options as $rkey => $rvalue){
+													echo '<div class="list-item" data-src="'.($rkey+1).'" draggable="true"
+															data-question="'.$qvalue['idquestion'].'" 
+															data-question-response="'.$responses[0]['idquestion_response'].'" 
+													>';
+													echo $rvalue;
+													echo '</div>';
+												}	
+												echo 	"</div>";
+												echo "</div>";										
+											break;
 											case 'radio':
 												$responses = $set->getQuestionResponses( $idquestion );
 												foreach($responses as $rkey => $rvalue){

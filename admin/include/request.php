@@ -29,7 +29,8 @@
         break;
         case 'getPanelistCount':
             session_start();
-            $response['return'] = $set->getPanelistCount($_SESSION[$set->GetLoginSessionVar()] , 5);
+            $userType = $decoded['userType'];
+            $response['return'] = $set->getPanelistCount($_SESSION[$set->GetLoginSessionVar()] , 5, $userType);
             $response['message'] = $set->getErrorMessage();
         break;
         case "getUserProfile":
@@ -51,15 +52,6 @@
         case "getCampain":
             $idcampain = $decoded['idcampain'];
             $response['return'] = $set->getCampain($idcampain); //return campain data and links to surveys
-            
-            // $campain = $campain = $set->getCampain($idcampain); //return campain data and links to surveys
-            // if(!$campain){
-
-            // }else{
-                // $surveysFromCampain = $set->getSurveysFromCampain($idcampain);
-            // }
-            // $response['return'] = array('campain'=>$campain,'surveys'=>$surveysFromCampain);
-            
             $response['message'] = $set->getErrorMessage();
         break;
         case "getSurveys":
@@ -155,6 +147,15 @@
                 $response['message'] = $set->getErrorMessage();
 
             }
+        break;
+
+        case "updateCampain":
+            $idcampain = $decoded['idcampain'];
+            $name = $decoded['name'];
+            $description = $decoded['description'];
+            $status = $decoded['status'];
+            $response['return'] = $set->updateCampain($name,$description,$status,$idcampain);
+            $response['message'] = $set->getErrorMessage();
         break;
 
         case "getTotalSurveysFromCampain":
@@ -294,7 +295,14 @@
                         $respuesta = $set->getAnswer($questions[$y]['idquestion'],0,$idpanelist);
                         if(!$respuesta){}
                         else{$totalAnswers++;}
-                        array_push($arrayData,['question'=>$questions[$y]['html'],'answer'=>$respuesta]);
+                        if($questions[$y]['type'] == "order"){
+                            //meter dentro del cuadro de la pregunta el label de ordenacion
+                            $label = $set->getResponseLabel($questions[$y]['idquestion']);
+                            array_push($arrayData,['question'=>$questions[$y]['html'] . "<br>" . $label,'answer'=>$respuesta]);
+                        }else{
+                            array_push($arrayData,['question'=>$questions[$y]['html'] . $questions[$y]['type'],'answer'=>$respuesta]);
+                        }
+                        
                     }
                 break;
             }
@@ -307,7 +315,8 @@
             $idcampain = $decoded['idcampain'];
             $surveys = $set->getSurveysFromCampain($idcampain);
             session_start();
-            $panelists = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , '5','');
+            $userType = $set->getUserType($_SESSION[$set->GetLoginSessionVar()]);
+            $panelists = $set->getUsersModerator($_SESSION[$set->GetLoginSessionVar()] , '5',$userType);
             $dataArrayPanelist = [];
 
             //el primer loop es de los panelistas
@@ -339,7 +348,15 @@
                             $samples = false;
                             for($a = 0; $a < count($questions); $a++){
                                 $respuesta = $set->getAnswer($questions[$a]['idquestion'],0,$idpanelist);
-                                array_push($dataArray,['question'=>$questions[$a]['html'],'answer'=>$respuesta]);
+                                
+                                if($questions[$a]['type'] == "order"){
+                                    //meter dentro del cuadro de la pregunta el label de ordenacion
+                                    $label = $set->getResponseLabel($questions[$a]['idquestion']);
+                                    array_push($dataArray,['question'=>$questions[$a]['html'] . "\n" . $label,'answer'=>$respuesta]);
+                                }else{
+                                    array_push($dataArray,['question'=>$questions[$a]['html'],'answer'=>$respuesta]);
+                                }
+                                //array_push($dataArray,['question'=>$questions[$a]['html'] . "\n" . $questions[$a]['type'],'answer'=>$respuesta]);
                             }
                         break;  
                     }

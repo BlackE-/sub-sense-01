@@ -11,30 +11,17 @@
 				document.getElementById('campainTable').innerHTML = `<p>${data.message}</p>`;
 				return;
 			}
-
-			//tenemos información
 			const campains = data.return;
-			console.log(campains);
-			let dataHeadings = ['Campaña',...Object.keys(campains[0])];
-			dataHeadings.pop();	//idcapain
-			console.log(dataHeadings);
-
-
+			let dataHeadings = ['Campaña','Nombre','Estatus','Fecha Creación'];
 			let campainsData = campains.map(item =>{
-				let arrayReturn = [`<a href="campain?idcampain=${item.idcampain}">${item.idcampain}</a>`,item.name,item.status,item.date_created];
+				let arrayReturn = [`<a href="campain?idcampain=${item.idcampain}">${item.idcampain}</a>`,item.name];
+				console.log(item.status);
+				let s = (item.status === "1") ? "Activo": "Inactivo";
+				arrayReturn.push(s);
+				arrayReturn.push(item.date_created);
 				return arrayReturn;
-				
 			});
-
-			console.log(campainsData);
-
-			table = new simpleDatatables.DataTable("#campainTable", {
-				data: {
-					headings: dataHeadings,
-					data:campainsData
-				}
-			});
-
+			table = new simpleDatatables.DataTable("#campainTable", {data: {headings: dataHeadings,data:campainsData}});
 		})
 		.catch((error) => {
 		  console.error('Error:', error);

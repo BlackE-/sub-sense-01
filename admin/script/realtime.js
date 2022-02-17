@@ -37,7 +37,8 @@
 					case 'getUsersModerator':
 						for(let panelist of data.return){
 							var option = document.createElement("option");
-							option.text = `${panelist.firstname} ${panelist.lastname}`;
+							// option.text = `${panelist.firstname} ${panelist.lastname}`;
+							option.text = `${panelist.folio}`;
 							option.value = panelist.iduser;
 							selectPanelist.appendChild(option);
 						}
@@ -133,6 +134,7 @@
 		let dataCampain = new FormData();
 		dataCampain.append( 'request' , 'getUsersModerator' );
 		dataCampain.append( 'type' , '5' );
+		dataCampain.append( 'userType' , sessionStorage.getItem('userType') );
 		fetchCall( dataCampain );
 	}
 

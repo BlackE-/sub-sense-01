@@ -1,4 +1,4 @@
-	
+	let userTypeIndex;
 	fetchCall = ( answerData ) =>{
 		let object = {};
         answerData.forEach((value, key) => object[key] = value);
@@ -31,6 +31,7 @@
 		let panelistForm = new FormData();
 		panelistForm.append( 'request' , 'getPanelistCount' );
 		panelistForm.append( 'idinput' , 'panelistCount' );
+		panelistForm.append( 'userType' , sessionStorage.getItem('userType') );
 		fetchCall( panelistForm );
 	}
 

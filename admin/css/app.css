@@ -142,6 +142,7 @@ main section{padding: 50px 0;overflow: hidden;}
 
 
 #campainContainer .buttonContainer{grid-template-columns: 250px 250px;justify-content: space-between;}
+#campainContainer #saveCampain{display: none;}
 #campainContainer .formContainer form{background: var(--white-color);}
 #campainContainer .formContainer form input[type="submit"]{display: none;}
 #campainContainer .formContainer form .title{font-size: 1rem;border-bottom: 1px solid var(--grey-color-lighter);padding-bottom: 10px;}
@@ -149,7 +150,10 @@ main section{padding: 50px 0;overflow: hidden;}
 #campainContainer .formContainer form .formRow p{text-align: right;font-size: .8rem;}
 #campainContainer .formContainer form .formRow input,
 #campainContainer .formContainer form .formRow textarea{margin: 0;}
-#campainContainer .formContainer form .formRow .halfRow{display: grid;grid-template-columns: 1fr 1fr;grid-gap: 10px;}
+#campainContainer .formContainer form .formRow .halfRow{display: grid;grid-template-columns: 50px auto;grid-gap: 10px;}
+#campainContainer .formContainer form .formRow .halfRow label{border:0;}
+#campainContainer .formContainer form .formRow .halfRow input[type="checkbox"]:checked ~ label:after{content:'Activo';}
+#campainContainer .formContainer form .formRow .halfRow input[type="checkbox"] ~ label:after{content:'Inactivo';}
 
 
 
@@ -235,6 +239,13 @@ main section{padding: 50px 0;overflow: hidden;}
 #campainAnswer .surveysContainer form .questionHTMLContainer{padding-bottom: 20px;font-size: 1rem;}
 #campainAnswer .surveysContainer form .questionsContainer{padding: 20px;border: 1px solid var(--grey-color-darker);display: grid;grid-gap: 25px;}
 #campainAnswer .surveysContainer form .questionContainer{padding: 10px;background-color: var(--grey-color-lighter);}
+
+#campainAnswer .sortContainer{display:grid;grid-template-columns: 1fr 1fr;grid-gap:50px;}
+#campainAnswer .list{background: var(--blue-color);padding: 1rem;}
+#campainAnswer .answerOrder{background:var(--blue-color-lighter);border:1px solid;padding: 1rem;}
+#campainAnswer .answerOrder p{text-align: center;font-size: 2rem;}
+#campainAnswer .ghost { opacity: .4; }
+#campainAnswer .list-item {background: #8bb3f4;padding: 0.5rem;border: 1px solid white;margin: 1px 0;}
 
 @media(max-width: 768px){
 	#campainAnswer .surveysContainer{padding: 0;}

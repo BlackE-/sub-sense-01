@@ -1,4 +1,5 @@
-	
+//https://codepen.io/vtno/pen/MXmpoy?editors=1111
+//change ordenacion para que sea sortable	
 
 	fetchCall = ( answerData ) =>{
 		let object = {};
@@ -37,6 +38,14 @@
 									answer.setAttribute('data-answer',idanswer);
 								});
 								
+							break;
+							case 'order':
+								//si ya fue contestada ya no se puede cambiar
+								//de una vez setear que el dragg se quita
+								// const answerOrder = document.getElementsByClassName("answerOrder");
+								// const listItem = document.getElementsByClassName("list-item");
+								console.log(data.return);
+								console.log("ya fue conetstada");
 							break;
 							case 'checkbox':
 								//traer todas las answer para setear el valor guardado
@@ -184,7 +193,7 @@
 			break;
 			default:
 				const formSurvey = document.getElementsByClassName('formSurvey')[0];	
-				formSurvey.addEventListener("submit",(event)=>event.preventDefault());
+				formSurvey.addEventListener("submit",(event)=>{event.preventDefault()});
 				let idquestion = formSurvey.elements['idquestion'];	// cada pregunta
 				for(let y = 0; y<idquestion.length;y++){
 					// traer las respuestas ya guardadas por cada pregunta de cada sample llamar a funcion
@@ -222,11 +231,46 @@
 						answerForm.append( 'idanswer' ,  event.target.getAttribute('data-answer'));
 						answerForm.append( 'idquestion' , event.target.getAttribute('data-question') );
 						answerForm.append( 'idquestion_response' , event.target.getAttribute('data-question-response'));
-						// console.log(event.target.type);
-						// console.log(event.target.getAttribute('data-answer'));
-						// console.log(event.target.getAttribute('data-question-response'));
-
 						fetchCall( answerForm );
+					});
+				}
+
+				const answerOrder = document.getElementsByClassName("answerOrder");
+				let dragged = null;
+				let lista = [];
+				const listItem = document.getElementsByClassName("list-item");
+				for(let a = 0; a< listItem.length;a++){
+					listItem[a].addEventListener("dragstart",function(event){
+						event.dataTransfer.setData('text/plain',null);
+						dragged = event.target;
+					});
+					listItem[a].addEventListener("dragend",function(event){
+						event.preventDefault();
+						listItem[a].setAttribute('draggable',false);
+					});
+				}
+				for(let a = 0; a< answerOrder.length;a++){
+					answerOrder[a].addEventListener("dragenter", function(event) {
+						event.preventDefault();	
+						event.target.appendChild( dragged );
+					});
+					answerOrder[a].addEventListener("dragover", function( event ) {event.preventDefault();}, false);
+					answerOrder[a].addEventListener("drop", function(event){
+						event.preventDefault();
+						lista.push(dragged.getAttribute('data-src'));
+						if(lista.length == answerOrder.length){
+							console.log("guardar respuesta");
+							let answerForm = new FormData();
+							answerForm.append( 'request' , 'saveAnswer' );
+							answerForm.append( 'idsample' , '' );
+							answerForm.append( 'idpanelist' , idpanelist );
+							answerForm.append( '_typeInput' , 'order' );
+							answerForm.append( 'value' , lista );
+							answerForm.append( 'idanswer' ,  'null');
+							answerForm.append( 'idquestion' , dragged.getAttribute('data-question') );
+							answerForm.append( 'idquestion_response' , dragged.getAttribute('data-question-response'));
+							fetchCall( answerForm );
+						}
 					});
 				}
 
