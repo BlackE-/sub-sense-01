@@ -423,7 +423,7 @@
 			$returnValue = true;
 			$this->checkDBLogin();
 
-			$qry = 'SELECT name,status,date_created,idcampain from campain';
+			$qry = 'SELECT name,status,date_created,idcampain from campain WHERE status = 1';
 			$result = $this->db->selectQuery($qry);
 			if(!$result){
 				$this->db->HandleError('Sin Campañas');
