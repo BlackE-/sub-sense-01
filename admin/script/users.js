@@ -65,16 +65,17 @@
 		let datos = new FormData();
 		datos.append( 'request' , 'getUsersModerator' );
 		datos.append( 'type' , usersType );
-		datos.append( 'userType' , userTypeForUsers );
+		// datos.append( 'userType' , userTypeForUsers );
+		datos.append( 'userType' , sessionStorage.getItem('userType') );
 		fetchCall(datos);
 	}
 	
-	checkUserType = () =>{
-		let user = new FormData();
-		user.append( 'request' , 'checkUser' );
-		fetchCall( user );
-	}
-	checkUserType();
+	// checkUserType = () =>{
+	// 	let user = new FormData();
+	// 	user.append( 'request' , 'checkUser' );
+	// 	fetchCall( user );
+	// }
+	// checkUserType();
 
 	const button = document.querySelector("#tabletoexcel");
 	button.addEventListener("click", e => {

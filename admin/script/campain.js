@@ -1,5 +1,8 @@
 	const formCampain = document.getElementById('campainForm');
 	const saveCampain = document.getElementById('saveCampain');
+	let userTypeForUsers;
+	const usersType = '5';
+
 	fetchCall = ( dataFetch ) =>{
 		openModalFunction();
 		let object = {};
@@ -35,20 +38,57 @@
 								saveCampain.style.display="block";
 								formCampain.elements['statusCampain'].removeAttribute("disabled");
 								document.getElementById("startCampain").style.display="none";
+								getPanelists();
 							break;
 							default:
 								document.getElementById("startCampain").style.display="none";
 							break;
 						}
+						
 					break;
 					case "updateCampain":
-
+					break;
+					case "getPanelistFromCampain":
+						// console.log(data.return);
+						if(!data.return){
+							document.getElementById('usersTable').innerHTML = `<p>${data.message}</p>`;
+							return;
+						}
+						
+						//tenemos información
+						const users = data.return;
+						let sampleNumber = users[0].samples.length;
+						let samplesArray = [];
+						let userData = users.map(item => {
+						 	let arrayReturn = [item.user];
+						 	item.samples.map( item => arrayReturn.push(item) );
+						 	return arrayReturn;
+						});
+						let headers = ["N"];
+						for(let x=1;x<=sampleNumber;x++){
+							headers.push(`C-${x}`);
+						}
+						table = new simpleDatatables.DataTable("#usersTable", {
+							data: {
+								headings: headers,
+								data:userData
+							}
+						});
 					break;
 				}
 				closeModalFunction();
 			}
 		});
 	}
+
+	getPanelists = () =>{
+		let datos = new FormData();
+		datos.append( 'request' , 'getPanelistFromCampain' );
+		datos.append( 'type' , usersType );
+		datos.append( 'idcampain' , idcampain );
+		fetchCall(datos);
+	}
+
 	getCampaindId = () =>{
 		const url_string = window.location.href
 		const url = new URL(url_string);
@@ -61,7 +101,7 @@
 		let dataCampain = new FormData();
 		dataCampain.append( 'request' , 'getCampain' );
 		dataCampain.append( 'idcampain' , idcampain );
-		fetchCall( dataCampain );
+		fetchCall( dataCampain );	
 	}
 
 	const startCampain = document.getElementById('startCampain');
@@ -78,4 +118,35 @@
 		campainData.append("status",status);
 		campainData.append("idcampain",idcampain);
 		fetchCall(campainData);
+	});
+
+
+	fetchPost = (formData) =>{
+		fetch('./include/uploadFile.php', {
+		  method: 'POST',
+		  body: formData
+		})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			switch(formData.request){
+				case "importarHojaControl":
+					console.log("getPanelistFromCampain");
+					window.location.reload();
+				break;
+			}
+		})
+		.catch(error => {
+		  console.error(`Error:  ${error}`);
+		});
+	}
+
+	const importarHojaControl = document.getElementById("importarHojaControl");
+	importarHojaControl.addEventListener("change",(file)=>{
+		openModalFunction();
+		let formData = new FormData();
+		formData.append('request','importarHojaControl');
+		formData.append('idcampain',idcampain);
+		formData.append('file',file.target.files[0]);
+		fetchPost(formData);
 	});

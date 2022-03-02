@@ -53,7 +53,7 @@
 		        	}
 		        } 
 			}
-		    $this->db->closeAll();
+		    $this->db->CloseAll();
 		    return $returnValue;
 	    }
 
@@ -82,7 +82,7 @@
 				$returnValue = false;
 				$this->db->HandleError('No registro' . $qry);
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue;
 		}
 
@@ -102,7 +102,7 @@
 			if(!$this->db->insertQuery($qry)){
 				$returnValue = false;
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue;
 		}
 		function getUserType($iduser){
@@ -117,7 +117,7 @@
 				$row = $this->db->fetchAssoc($result);
 				$returnValue = $row['type'];
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -144,7 +144,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -172,7 +172,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -208,7 +208,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -242,7 +242,42 @@
 					$returnValue = $row['TOTAL'];
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
+			return $returnValue; 
+		}
+
+		function getPanelistFromCampain($idcampain, $type){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT 	_user.iduser,_user.folio,_user.firstname,_user.lastname,_user.type,
+							_usersrelation.campain, _usersrelation.panelist,_usersrelation.ordercampain
+							from _user,_usersrelation
+							
+							WHERE _user.iduser = _usersrelation.panelist
+							AND _usersrelation.campain='.$idcampain 
+							.' AND _user.type='.$type
+							.' ORDER BY _usersrelation.ordercampain';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleDBError('Sin usuarios');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin usuarios');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					$counter = 1;
+					while($row = $this->db->fetchAssoc($result)){
+						$iduser = $row['iduser'];
+						$sampleOrder = $this->getSamplesOrden($iduser);
+						array_push($algo, ["user"=>$counter,"samples"=>$sampleOrder]);
+						$counter++;
+					}
+					$returnValue = $algo;
+				}
+			}
+			//$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -280,7 +315,7 @@
 				$returnValue = $iduser;
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -322,21 +357,44 @@
 			if(!$this->db->insertQuery($qry)){
 				$returnValue = false;
 			}
-		    $this->db->closeAll();
+		    $this->db->CloseAll();
 		    return $returnValue;
 		}
 
-		function insertuserrelation($moderator,$panelist){
+		function insertuserrelation($moderator,$panelist,$idcampain,$order){
 			$this->checkDBLogin();
 
 			$returnValue = true;
 			$formvars = array();
 
-			$qry = "INSERT into _usersrelation (moderator , panelist) values (".$moderator.", ".$panelist.")";
+			$qry = "INSERT into _usersrelation (moderator , panelist, campain, ordercampain) values (".$moderator.", ".$panelist.",".$idcampain.",".$order.")";
 			if(!$this->db->insertQuery($qry)){
 				$returnValue = false;
 			}
-		    $this->db->closeAll();
+		    $this->db->CloseAll();
+		    return $returnValue;
+		}
+
+		function insertusersample($iduser,$idsample,$samplecode,$_order){
+			$this->checkDBLogin();
+
+			$returnValue = true;
+			$formvars = array();
+			$formvars['iduser'] = $this->Sanitize($iduser);
+			$formvars['idsample'] = $this->Sanitize($idsample);
+			$formvars['samplecode'] = $this->Sanitize($samplecode);
+			$formvars['_order'] = $this->Sanitize($_order);
+
+			$qry = "INSERT into _usersamplerelation (_user_iduser , sample_idsample, samplecode,_order)  values ('"
+					.$formvars['iduser'] . "','"
+					.$formvars['idsample'] . "','"
+					.$formvars['samplecode'] . "','"
+					.$formvars['_order'] . "')";
+
+			if(!$this->db->insertQuery($qry)){
+				$returnValue = false;
+			}
+		    $this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -372,7 +430,7 @@
 				$returnValue = $idcampain;
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -415,7 +473,7 @@
 				$returnValue = $iduser;
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -440,7 +498,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -465,7 +523,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -487,7 +545,7 @@
 					$returnValue = $row['TOTAL'];
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -503,7 +561,7 @@
 				$this->db->HandleError('No update campain'.$qry);
 				$returnValue = false;
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue;
 		}
 
@@ -530,7 +588,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -551,7 +609,7 @@
 					$returnValue = $row;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -575,7 +633,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -596,7 +654,7 @@
 					$returnValue = $this->db->fetchAssoc($result);
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -613,7 +671,7 @@
 				$row = $this->db->fetchAssoc($result);
 				$returnValue = $row['NUMBER'];
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -630,7 +688,7 @@
 				$row = $this->db->fetchAssoc($result);
 				$returnValue = $row['idsurvey'];
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -647,7 +705,7 @@
 				$row = $this->db->fetchAssoc($result);
 				$returnValue = $row['idsurvey'];
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -671,7 +729,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -684,7 +742,7 @@
 				$this->db->HandleError('No update');
 				$returnValue = false;
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue;
 		}
 
@@ -718,12 +776,12 @@
 				$returnValue = $idquestion;
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
 		/*	SAMPLES */
-		function insertSample($name,$code,$_order,$idsurvey){
+		function insertSample($name,$code,$_order,$idsurvey,$idcampain){
 			$returnValue = true;
 			$this->checkDBLogin();
 
@@ -732,9 +790,10 @@
 			$formvars['name'] = $this->Sanitize($name);
 			$formvars['code'] = $this->Sanitize($code);
 			$formvars['idsurvey'] = $this->Sanitize($idsurvey);
+			$formvars['idcampain'] = $this->Sanitize($idcampain);
 
 
-			$qry = "INSERT into sample (name, code, _order, survey_idsurvey) values ('"
+			$qry = "INSERT into sample (name, code, _order, survey_idsurvey,campain_idcampain) values ('"
 					.$formvars['name'] . "','"
 					.$formvars['code'] . "','"
 					.$formvars['_order'] . "','"
@@ -745,7 +804,7 @@
 				$returnValue = false;
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -769,9 +828,57 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
+
+		function getIDsampleFromCode($code,$idcampain){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT idsample,code,campain_idcampain from sample WHERE campain_idcampain = '.$idcampain . ' AND code="'.$code.'"';
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin muestras');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin muestras');
+					$returnValue = false;
+				}else{
+					$row = $this->db->fetchAssoc($result);
+					$returnValue = $row;
+				}
+			}
+			$this->db->CloseAll();
+			return $returnValue; 
+		}
+
+		function getSamplesOrden($iduser){
+			$returnValue = true;
+			$this->checkDBLogin();
+			$qry = 'SELECT * from _usersamplerelation WHERE _user_iduser = '.$iduser." ORDER BY _order";
+			$result = $this->db->selectQuery($qry);
+			if(!$result){
+				$this->db->HandleError('Sin muestras');
+				$returnValue = false;
+			}else{
+				if(!$this->db->numRows($result)){
+					$this->db->HandleError('Sin muestras');
+					$returnValue = false;
+				}else{
+					$algo = array();
+					while($row = $this->db->fetchAssoc($result)){
+						array_push($algo, $row['samplecode']);
+					}
+					$returnValue = $algo;
+				}
+			}
+			$this->db->CloseAll();
+			return $returnValue; 
+		}
+
+
+		/* 	RESPONSES	*/
 
 		function insertResponse($value,$label,$type){
 			$returnValue = true;
@@ -795,7 +902,7 @@
 				$idresponse = $this->db->lastInsertID();
 				$returnValue = $idresponse;
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -818,7 +925,7 @@
 				$returnValue = false;
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -843,7 +950,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -874,7 +981,7 @@
 					$returnValue = $algo;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue;
 		}
 
@@ -917,7 +1024,7 @@
 				$result = $this->db->updateQuery($updateTemporal);
 			}
 
-			$this->db->closeAll();
+			$this->db->CloseAll();
 		    return $returnValue;
 		}
 
@@ -959,7 +1066,7 @@
 					
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -985,7 +1092,7 @@
 					$returnValue = $row['label'];
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue;
 		}
 
@@ -1009,7 +1116,7 @@
 			}else{
 				$returnValue = $result;
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -1082,7 +1189,7 @@
 					$returnValue = $idanswer;
 				}
 			}
-			$this->db->closeAll();
+			$this->db->CloseAll();
 			return $returnValue; 
 		}
 
@@ -1207,7 +1314,7 @@
 					$returnValue = false;
 				}
 		    }
-		    $this->db->closeAll();
+		    $this->db->CloseAll();
 		    return $returnValue;
 		}
 		

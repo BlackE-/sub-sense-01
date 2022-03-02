@@ -2,7 +2,7 @@
 	const urlArray = newURL.split('/');
 	const urlActive = urlArray[urlArray.length-1];
 	const menuOptions = document.getElementsByClassName('menu');
-	let userType = null;
+	let userType = null || sessionStorage.getItem('userType');
 	fetchCall = ( answerData ) =>{
 		let object = {};
 		answerData.forEach((value, key) => object[key] = value);

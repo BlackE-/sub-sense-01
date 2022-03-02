@@ -54,6 +54,13 @@
             $response['return'] = $set->getCampain($idcampain); //return campain data and links to surveys
             $response['message'] = $set->getErrorMessage();
         break;
+        case "getPanelistFromCampain":
+            $idcampain = $decoded['idcampain'];
+            $type = $decoded['type'];
+            $users = $set->getPanelistFromCampain($idcampain, $type ); //get list of panelist from campain
+            $response['return'] = $users; //get list of panelist from campain
+            $response['message'] = $set->getErrorMessage();
+        break;
         case "getSurveys":
             $response['return'] = $set->getSurveys();
             $response['message'] = $set->getErrorMessage();
@@ -209,8 +216,9 @@
             $_order =  $decoded['_order'];
             $code =  $decoded['code'];
             $idsurvey =  $decoded['idsurvey'];
+            $idcampain =  $decoded['idcampain'];
 
-            $sample = $set->insertSample( $name,$code,$_order,$idsurvey );
+            $sample = $set->insertSample( $name,$code,$_order,$idsurvey,$idcampain );
             $response['return'] = $sample;
             $response['message'] = $set->getErrorMessage();
         break;

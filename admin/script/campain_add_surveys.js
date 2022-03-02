@@ -230,6 +230,7 @@ addSamples.addEventListener("click",function(){
     samples.append('code',sampleCode);
     samples.append('_order',currentSample);
     samples.append('idsurvey',idsurvey);
+    samples.append('idcampain',idcampain);
     fetchCall(samples);
 });
 

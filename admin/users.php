@@ -16,13 +16,13 @@
 				<a href="user-new"><button class="add" id="addPanelist"><i class="bi bi-person-plus-fill"></i> <span>Agregar panelista</span></button></a>
 				<button class="download" id="tabletoexcel"><i class="bi bi-download"></i> <span>Descargar</span></button>
 			</div>
-			<div class="row">
+			<!--<div class="row">
 				<a href="#"></a>
 				<div class="">
 					<p><i class="bi bi-upload"></i> <span>Importar Panelistas</span></p>
 					<input type="file" id="importUsers" accept=".csv"/>
 				</div>
-			</div>
+			</div>-->
 			<div class="tableContainer">
 				<table class="table" id="usersTable"></table>	
 			</div>

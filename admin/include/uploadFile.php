@@ -6,6 +6,67 @@
 	$request = $_POST['request'];
 	
 	switch($request){
+        case 'importarHojaControl':
+            if($_FILES['file']['error'] == 0){
+                $idcampain = $_POST['idcampain'];
+                $name = $_FILES['file']['name'];
+                $tmp = explode('.', $name);
+                $ext = end($tmp);
+
+                $type = $_FILES['file']['type'];
+                $tmpName = $_FILES['file']['tmp_name'];
+            
+                // check the file is a csv
+                if($ext === 'csv'){
+                    $tmpName = $_FILES['file']['tmp_name'];
+                    $csvAsArray = array_map('str_getcsv', file($tmpName));
+
+                    // ya que tengo la data recorrerla para guardar cada registro
+                    for($index = 1;$index<count($csvAsArray);$index++){
+                        $user = $csvAsArray[$index];
+                        $folio = '';
+                        $firstname = '';
+                        $lastname = '';
+                        $username = '';
+                        $email = '';
+                        $password = '';
+                        $type = '5';
+                        $dob = '';
+                        $sex = '';
+                        $nse = '';
+
+                        $iduser = $set->insertUser($folio, $firstname, $lastname, $username, $email, $password, $type , $dob, $sex, $nse);
+                        if(!isset($_SESSION))session_start();
+                        $relation = $set->insertuserrelation( $_SESSION[$set->GetLoginSessionVar()] , $iduser,$idcampain, $index);
+                        
+                        $numberofsamples = count($user) - 1;
+                        $counter = 1;
+                        for($item=1;$item <= $numberofsamples;$item++){
+                            $counter++;
+                            $code = $user[$item];
+                            $sample = $set->getIDsampleFromCode($code,$idcampain);
+                            $idusersample = $set->insertusersample($iduser,$sample['idsample'],$sample['code'],$counter);
+                        }
+                        
+                        $response['return'] = $iduser;
+                        $response['message'] = $set->getErrorMessage();
+                    }
+
+                    $json = json_encode($response);
+                    http_response_code(SUCCESS_CODE);
+                }else{
+                    $success =  $request;
+                    $json = json_encode($success);
+                    http_response_code(ERROR_CODE);
+                }
+		        die($json);
+	        }else{
+	        	$success =  $_POST;
+		        $json = json_encode($success);
+		        http_response_code(ERROR_CODE);
+		        die($json);
+	        }
+        break;
 		case 'importUsers':
             if($_FILES['file']['error'] == 0){
                 $name = $_FILES['file']['name'];

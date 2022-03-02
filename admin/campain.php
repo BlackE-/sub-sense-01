@@ -51,6 +51,22 @@
 
 					<button id="startCampain">Comenzar Cuestionarios</button>
 			</div>
+			<div class="row">
+				<h1 class="title">Panelistas de la campaña</h1>
+			</div>
+			<div class="row buttonContainer" style="margin-bottom:30px;">
+				<div class="">
+					<p><i class="bi bi-upload"></i> <span>Importar Hoja De Control (Primer paso)</span></p>
+					<input type="file" id="importarHojaControl" accept=".csv"/>
+				</div>
+				<div class="">
+					<p><i class="bi bi-upload"></i> <span>Actualizar Panelistas <br>(Segundo paso)</span></p>
+					<input type="file" id="updateHojaControl" accept=".csv"/>
+				</div>
+			</div>
+			<div class="row panelistTable">
+				<table class="table" id="usersTable"></table>
+			</div>
 		</section>
 	</main>
 	<?php include('footer.php');?>

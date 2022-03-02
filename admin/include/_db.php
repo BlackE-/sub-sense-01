@@ -281,13 +281,42 @@
                             codigo SMALLINT,
                             _order TINYINT,
                             survey_idsurvey INT UNSIGNED,
+                            campain_idcampain INT UNSIGNED,
                             
                             INDEX(survey_idsurvey),
                             
                             FOREIGN KEY (survey_idsurvey)
                                 REFERENCES survey(idsurvey)
-                                ON DELETE NO ACTION ON UPDATE CASCADE 
+                                ON DELETE NO ACTION ON UPDATE CASCADE,
+
+                            FOREIGN KEY (campain_idcampain)
+                                REFERENCES campain(idcampain)
+                                ON DELETE NO ACTION ON UPDATE CASCADE
                         )";
+                $result = mysqli_query($this->connection,$create);
+                if(!$result){
+                    $returnValue = false;
+                    $this->HandleDBError('Error creating tables');
+                }
+
+                $create = "CREATE TABLE _usersamplerelation(
+                    idusersample INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    _user_iduser INT UNSIGNED NOT NULL,
+                    sample_idsample INT UNSIGNED NOT NULL,
+                    samplecode SMALLINT,
+                    _order SMALLINT,
+
+                    INDEX (_user_iduser),
+                    INDEX (sample_idsample),
+                    
+                    FOREIGN KEY (_user_iduser)
+                        REFERENCES _user(iduser)
+                        ON DELETE NO ACTION ON UPDATE CASCADE,
+
+                    FOREIGN KEY (sample_idsample)
+                        REFERENCES sample(idsample)
+                        ON DELETE NO ACTION ON UPDATE CASCADE
+                )";
                 $result = mysqli_query($this->connection,$create);
                 if(!$result){
                     $returnValue = false;
